@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+   .layui-form-label{
+     width: auto;
+   }
+   .layui-form-select,.layui-input{
+     width: 100px;
+   }
+   .layui-form-item .layui-input-inline{
+     width: auto;
+   }
+ </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <crmblok>
+        <div style="float:left;">
+          <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+          <button class="layui-btn" onclick="crm_admin_show('创建订单','{:url('service/addorder')}')"><i class="layui-icon"></i>创建订单</button>
+        </div>
+        <div style="float:right;">
+          <form class="layui-form" method="post" style="display:inline-block;">
+            <div class="layui-form-item">
+            <label class="layui-form-label">姓名：</label>
+            <div class="layui-input-inline">
+              <input type="text" name="user_name" class="layui-input" placeholder="查询姓名">
+            </div>
+
+            <label class="layui-form-label">电话：</label>
+            <div class="layui-input-inline">
+              <input type="text" name="staff_tel" class="layui-input" placeholder="查询手机号">
+            </div>
+
+            <label class="layui-form-label">部门：</label>
+            <div class="layui-input-inline">
+              <select name="sectors_id" id="sectors" lay-search lay-filter="sectors">
+                <option value="0">选择部门</option>
+                {volist name="sectors" id="vv"}
+                <option value="{$vv['id']}">{$vv['name']}</option>
+                {/volist}
+              </select>
+            </div>
+
+            <label class="layui-form-label">职位：</label>
+            <div class="layui-input-inline">
+              <select name="quarters_id" id="quarters_id">
+                <option value="">请先选择职位</option>
+              </select>
+            </div>
+            <button class="layui-btn layui-btn-normal" type="submit"><i class="layui-icon layui-icon-search"></i>搜索</button>
+          </div>
+          </form>
+        </div>
+      </crmblok>
+      <table class="layui-table">
+          <thead>
+            <tr>
+              <th width="25" align="center">
+                <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+              </th>
+
+              <th align="center">姓名</th>
+              <th align="center">城市</th>
+              <th align="center">职位</th>
+              <th align="center">直属领导</th>
+              <th align="center">手机号</th>
+              <th align="center">微信</th>
+              <th align="center">QQ</th>
+              <th align="center">类型</th>
+              <th align="center">状态</th>
+              <th align="center">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {empty name="list"}
+            <tr align="center" style="height:500px;"><td colspan="11">暂无员工</td></tr>
+          {else}
+            {foreach $list as $l}
+              <tr>
+                <td>
+                  <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$l.id}'><i class="layui-icon">&#xe605;</i></div>
+                </td>
+                <td>{$l['user_name']}</td>
+                <td>{volist name="city" id="vv"}{if condition="$vv['id'] eq $l['citys_id']"}{$vv['name']}{/if}{/volist}</td>
+                <td>{volist name="quarters" id="vv"}{if condition="$vv['id'] eq $l['quarters_id']"}{$vv['name']}{/if}{/volist}</td>
+                <td>{volist name="list" id="vv"}{if condition="$vv['id'] eq $l['firm_report']"}{$vv['user_name']}{/if}{/volist}</td>
+                <td>{$l['staff_tel']}</td>
+                <td>{$l['staff_wechat']}</td>
+                <td>{$l['staff_qq']}</td>
+                <td>{if condition="$l['firm_type'] eq 1"}全职{else}兼职{/if}</td>
+                <td>{if condition="$l['staff_status'] eq 1"} 在职 {elseif condition="$l['staff_status'] eq 2"} 休假 {elseif condition="$l['staff_status'] eq 3"} 离职 {/if}</td>
+                <td>
+                	<a href="{:url('team/user',['id'=>$l['id']])}"><button class="layui-btn layui-btn-normal layui-btn-xs">编辑</button></a>
+                	<button class="layui-btn layui-btn-normal layui-btn-xs" onclick="del('{$l['id']}')">删除</button>
+                </td>
+              </tr>
+            {/foreach}
+          {/empty}
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  	function del(id)
+  	{
+  		layer.confirm("您确定删除该用户吗？",function(){
+  			$.ajax({
+  				url:"{:url('team/del')}",
+  				data:{id:id},
+  				type:'post',
+  				success:function(data)
+  				{
+  					var status = JSON.parse(data);
+  					layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+  						window.location.reload();
+  					});
+  				}
+  			});
+  		});
+  	}
+    function delAll()
+    {
+      var datas = tableCheck.getData();
+      layer.confirm("确认删除选择的用户吗？",function(){
+        $.ajax({
+          url:"{:url('team/del')}",
+          data:{id:datas},
+          type:'post',
+          success:function(data){
+            var status = JSON.parse(data);
+            layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+              window.location.reload();
+            });
+          }
+        });
+      });
+    }
+    // 赋值岗位
+    layui.use(['form','element'], function(){
+        var form = layui.form,
+        element = layui.element;
+      // 编辑其他员工信息
+      form.on('select(sectors)', function(data) {
+        var areaId = data.value;
+        $.ajax({
+          url:"{:url('AjaxAction/quar')}",
+          data:{id:areaId},
+          type:'post',
+          success:function(data){
+            $("#quarters_id").html(data);
+            form.render('select');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

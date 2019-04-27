@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+   .layui-form-select{
+     width: 100px;
+   }
+   .layui-unselect{
+     background-color: #eee;
+   }
+   .layui-form-selected dl{
+     background-color: #eee;
+   }
+ </style>
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+        <crmblok>
+          <div style="position: relative;">
+            <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+            <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加项目','{:url('project/add')}')"><i class="layui-icon">&#xe608;</i>添加项目</button>
+            <form class="layui-form" method="post" style="display:inline-block;position: absolute;right: 0;">
+              <div class="layui-input-inline">
+                <select name="search_id">
+                    <option value="1" selected>项目名称</option>
+                    <option value="2">项目官网</option>
+                    <option value="3">项目负责人</option>
+                </select>
+              </div>
+              <div class="layui-input-inline">
+                <input type="text" name="value" class="layui-input" style="background-color:#eee;border:none;">
+              </div>
+              <button class="layui-btn layui-btn-normal" type="submit"><i class="layui-icon layui-icon-search"></i>搜索</button>
+            </form>
+          </div>
+        </crmblok>
+        <table class="layui-table layui-form">
+          <thead>
+            <tr>
+              <th width="25" align="center">
+                <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+              </th>
+              <th align="center">项目名称</th>
+              <th align="center">项目官网</th>
+              <th align="center">客服电话</th>
+              <th align="center">客服微信</th>
+              <th align="center">客服QQ</th>
+              <th align="center">负责人</th>
+              <th align="center">负责人电话</th>
+              <th align="center">项目时间</th>
+              <th width="60" align="center">状态</th>
+              <th width="100" align="center">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {empty name="projects"}
+              <tr align="center" style="height:500px;"><td colspan="11">暂无项目</td></tr>
+          {else}
+            {volist name="projects" id="pro"}
+              <tr>
+                <td>
+                  <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$pro.id}'><i class="layui-icon">&#xe605;</i></div>
+                </td>
+                <td>{$pro['name']}</td>
+                <td>{$pro['website']}</td>
+                <td>{$pro['tel']}</td>
+                <td>{$pro['wechat']}</td>
+                <td>{if condition="$pro['qq'] == 0"}暂无{else}{$pro['qq']}{/if}</td>
+                <td>{$pro['head']}</td>
+                <td>{$pro['head_tel']}</td>
+                <td>{:date('Y/m/d H:i:s',$pro['create_t'])}</td>
+                <td>
+                  {switch name="$pro.status"}
+                  {case value="1"}<button class="layui-btn layui-btn-normal layui-btn-xs">运行</button>{/case}
+                  {case value="2"}<button class="layui-btn layui-btn-warm layui-btn-xs">筹备</button>{/case}
+                  {case value="0"}<button class="layui-btn layui-btn-danger layui-btn-xs">暂停</button>{/case}
+                  {/switch}
+                </td>
+                <td>
+                  <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑项目','{:url('project/edit',array('id'=>$pro.id))}')"><i class="layui-icon"></i></button>
+                  <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del({$pro['id']})"><i class="layui-icon"></i></button>
+                </td>
+              </tr>
+            {/volist}
+          {/empty}
+          </tbody>
+        </table>
+        <script type="text/javascript">
+          function delAll () {
+            var data = tableCheck.getData();
+            layer.confirm('确认要删除'+data+'吗？',function(index){
+              $.get("{:url('project/del')}?id="+data,function(data){
+                var message = JSON.parse(data);
+                if (message.icon == 6){
+                    layer.msg(message.msg,{icon: message.icon,time:1000},function () {
+                        location.href=location.href
+                   });
+                } else {
+                    layer.msg(message.msg,{icon: message.icon,time:1000});
+                }
+              })
+            });
+          }
+
+          function del(id){
+            layer.confirm('确认要删除吗？',function(){
+              $.get("{:url('project/del')}?id="+id,function(data){
+                var message = JSON.parse(data);
+                if (message.icon == 6){
+                    layer.msg(message.msg,{icon: message.icon,time:1000},function () {
+                        location.href=location.href
+                   });
+                } else {
+                    layer.msg(message.msg,{icon: message.icon,time:1000});
+                }
+              })
+            })
+          }
+        </script>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

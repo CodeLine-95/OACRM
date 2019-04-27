@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">编辑部门</div>
+          <div class="layui-card-body" pad15>
+            <div class="layui-form">
+              <div class="layui-form-item">
+                <label class="layui-form-label">部门名称</label>
+                <div class="layui-input-inline">
+                <input type="text" name="name" value="{$sec['name']}" class="layui-input">
+                </div>
+
+                <label class="layui-form-label">负责城市</label>
+                <div class="layui-input-inline">
+                  <select name="city">
+                    <option value="0" {if condition="$sec['city'] eq 0"} selected {/if}>全国</option>
+                  {volist name="city" id="vv"}
+                    <option value="{$vv['id']}" {if condition="$sec['city'] eq $vv['id']"} selected {/if}>{$vv['name']}</option>
+                  {/volist}
+                  </select>
+                </div>
+                <input type="hidden" name="id" value="{$sec['id']}">
+
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">负责项目</label>
+                <div class="layui-input-block">
+                  {volist name="project" id="vv"}
+                    <input type="checkbox" {in name="$vv['id']" value="$sec['projects']"}checked{/in} name="projects" lay-filter="filter" title="{$vv['name']}" value="{$vv['id']}">
+                  {/volist}
+                </div>
+              </div>
+              <input type="hidden" name="business" value="{$sec['business']}">
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="business">负责业务</label>
+                <div class="layui-input-block" id="business">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">部门负责人</label>
+                <div class="layui-input-inline">
+                <input type="text" name="author" value="{$sec['author']}" class="layui-input">
+                </div>
+
+                <label class="layui-form-label">负责人电话</label>
+                <div class="layui-input-inline">
+                <input type="text" name="tel" value="{$sec['tel']}" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">备注说明</label>
+                <div class="layui-input-block">
+                  <textarea name="desc" class="layui-textarea" style="resize: none;">{$sec['desc']}</textarea>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">部门状态</label>
+                <div class="layui-input-block">
+                  <input type="radio" name="status" value="1" title="开启" {if condition="$sec['status'] eq 1"} checked="" {/if} >
+                  <input type="radio" name="status" value="0" title="关闭" {if condition="$sec['status'] eq 0"} checked="" {/if}>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="set_website">提交</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    //数组删除某一项元素
+    Array.prototype.remove = function(val) {
+      var index = this.indexOf(val);
+      if (index > -1) {
+        this.splice(index, 1);
+      }
+    };
+    function checkedItem(name){
+      var arr = new Array();
+      $("input:checkbox[name="+name+"]:checked").each(function(i){
+         arr[i] = $(this).val();
+       });
+       return arr.join(",");//将数组合并成字符串
+    }
+    //页面加载获取的业务
+    var checkedStr = checkedItem('projects');
+    var business_id = $('input[name=business]').val();
+    $.post("{:url('AjaxAction/yewuall')}",{project_id:checkedStr,business_id:business_id},function(data){
+      $('#business').html(data);
+      layui.use(['form','element'], function(){
+        var form = layui.form;
+        element = layui.element;
+        form.render('checkbox');
+      });
+    });
+    layui.use(['form','element'], function(){
+      var form = layui.form;
+      element = layui.element;
+      var arr = [];
+      //监听checkbox
+      form.on('checkbox(filter)',function(data){
+        if (data.elem.checked === true) {
+          arr.push(data.elem.value);
+        }else{
+          arr.remove(data.elem.value);
+        }
+        var project_ids = arr.join(",");
+        $.post("{:url('AjaxAction/yewuall')}",{project_id:project_ids},function(data){
+          $('#business').html(data);
+          form.render('checkbox');
+        });
+      });
+      form.on('submit(set_website)', function(data){
+        data.field.projects = checkedItem('projects');
+        data.field.business = checkedItem('business');
+        $.ajax({
+            type:'POST',
+            url:'{:url("sectors/update")}',
+            data: {
+                data:JSON.stringify(data.field)
+            },
+            success:function (data) {
+                var status = JSON.parse(data);
+                if (status.icon == 6){
+                    layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                        window.parent.location.reload();
+                    });
+                } else {
+                    layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                        window.location.reload();
+                    });
+                }
+            }
+        });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

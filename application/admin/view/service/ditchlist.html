@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+ </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+        <crmblok>
+          <div style="position: relative;">
+            <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+            <button class="layui-btn" onclick="crm_admin_show('添加来源','{:url('service/addditchlist')}')"><i class="layui-icon"></i>添加来源</button>
+<!--             <button class="layui-btn" onclick="crm_admin_show('添加渠道','{:url('service/ditch')}')"><i class="layui-icon"></i>渠道管理</button> -->
+          </div>
+        </crmblok>
+        <table class="layui-table">
+          <thead>
+            <tr>
+              <th width="25" align="center">
+                <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+              </th>
+              <th align="center">来源名称</th>
+              <th align="center">渠道入口</th>
+              <th align="center">来源说明</th>
+              <th align="center">创建时间</th>
+              <th align="center">状态</th>
+              <th align="center">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {empty name="list"}
+            <tr align="center" style="height:500px;"><td colspan="11">暂无来源</td></tr>
+          {else}
+            {foreach $list as $l}
+              <tr>
+                <td>
+                  <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$l.id}'><i class="layui-icon">&#xe605;</i></div>
+                </td>
+                <td>{$l['name']}</td>
+                <td>{$l['entryname']}</td>
+                <td>{$l['description']}</td>
+                <td>{:date('Y-m-d H:i:s',$l['createtime'])}</td>
+                <td>
+                  {switch name="$l['status']"}
+                  {case value="1"}<label style="color:#6D6F0E;">启动</label>{/case}
+	                {case value="2"}<label style="color:#E51C23;">暂停</label>{/case}
+	                {case value="3"}<label style="color:#1E9FFF;">筹备</label>{/case}
+                  {/switch}
+                </td>
+                <td>
+                	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑','{:url('service/updateditchlist',['id'=>$l['id']])}')">编辑</button>
+                	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del('{$l['id']}')">删除</button>
+                </td>
+              </tr>
+            {/foreach}
+          {/empty}
+          </tbody>
+        </table>
+    </div>
+    </div>
+  </div>
+  <script>
+  	function del(id)
+  	{
+  		layer.confirm("您确定删除该来源吗？",function(){
+  			$.ajax({
+  				url:"{:url('service/delditchlist')}",
+  				data:{id:id},
+  				type:'post',
+  				success:function(data)
+  				{
+  					var status = JSON.parse(data);
+  					layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+  						window.location.reload();
+  					});
+  				}
+  			});
+  		});
+  	}
+    function delAll()
+    {
+      var datas = tableCheck.getData();
+      layer.confirm("确认删除选择的来源务吗？",function(){
+        $.ajax({
+          url:"{:url('service/delditchlist')}",
+          data:{id:datas},
+          type:'post',
+          success:function(data){
+            var status = JSON.parse(data);
+            layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+              window.location.reload();
+            });
+          }
+        });
+      });
+    }
+    // 赋值岗位
+    layui.use(['form','element'], function(){
+      var form = layui.form,
+      element = layui.element;
+      // 编辑其他员工信息
+      form.on('select(sectors)', function(data) {
+        var areaId = data.value;
+        $.ajax({
+          url:"{:url('AjaxAction/quar')}",
+          data:{id:areaId},
+          type:'post',
+          success:function(data){
+            $("#quarters_id").html(data);
+            form.render('select');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

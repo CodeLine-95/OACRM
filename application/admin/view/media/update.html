@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">编辑账号</div>
+          <div class="layui-card-body" pad15>
+
+            <div class="layui-form" wid100 lay-filter="">
+              <div class="layui-form-item">
+                <label class="layui-form-label">帐号昵称</label>
+                <div class="layui-input-block">
+                  <input type="hidden" name="id" value="{$media['id']}">
+                  <input type="text" name="nick" value="{$media['nick']}" class="layui-input" placeholder="在此添加账号昵称">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">登陆账号</label>
+                <div class="layui-input-block">
+                  <input type="text" name="name" value="{$media['name']}" class="layui-input" placeholder="在此添加登陆账号">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">登陆密码</label>
+                <div class="layui-input-block">
+                  <input type="text" name="pass" value="{$media['pass']}" class="layui-input" placeholder="在此添加登陆密码">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" id="type_id">账号类型</label>
+                <div class="layui-input-block">
+                  <select class="layui-input" name="type_id" id="type_id" lay-filter="type_id">
+                    {foreach $typelist as $k=>$list}
+                      <option value="{$list['id']}" {if condition="$media['type_id'] == $list['id']"}selected{/if}>{$list['typename']}</option>
+                    {/foreach}
+                  </select>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <input type="hidden" name="platform" value="{$media['platform_id']}">
+                <label class="layui-form-label" for="platform_id">选择平台</label>
+                <div class="layui-input-block" id="platform_id">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">首页网址</label>
+                <div class="layui-input-block">
+                  <input type="text" name="website" value="{$media['website']}" class="layui-input" placeholder="在此添加首页网址">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">登陆链接</label>
+                <div class="layui-input-block">
+                  <input type="text" name="loginsite" value="{$media['loginsite']}" class="layui-input" placeholder="在此添加登陆链接">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">绑定手机</label>
+                <div class="layui-input-block">
+                  <input type="text" name="tel" value="{$media['tel']}" class="layui-input" placeholder="在此添加绑定手机">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">手机主人</label>
+                <div class="layui-input-block">
+                  <input type="text" name="hostname" value="{$media['hostname']}" class="layui-input" placeholder="在此添加手机主人">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">绑定身份证</label>
+                <div class="layui-input-block">
+                  <input type="text" name="idcard" value="{$media['idcard']}" class="layui-input" placeholder="在此添加绑定身份证">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">身份证姓名</label>
+                <div class="layui-input-block">
+                  <input type="text" name="idcard_name" value="{$media['idcard_name']}" class="layui-input" placeholder="在此添加身份证姓名">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">绑定微信</label>
+                <div class="layui-input-block">
+                  <input type="text" name="wechat" value="{$media['wechat']}" class="layui-input" placeholder="在此添加绑定微信">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">微信主人</label>
+                <div class="layui-input-block">
+                  <input type="text" name="wechat_name" value="{$media['wechat_name']}" class="layui-input" placeholder="在此添加微信主人">
+                </div>
+              </div>
+              <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注说明</label>
+                <div class="layui-input-block">
+                  <textarea name="remark" class="layui-textarea" style="resize: none;" placeholder="在此添加备注说明">{$media['remark']}</textarea>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="set_website">提交</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    layui.use(['form','element'], function(){
+      var form = layui.form;
+      element = layui.element;
+      form.on('select(type_id)',function(data){
+        var platform_id = $("input[name=platform]").val();
+        $.post("{:url('AjaxAction/platformAction')}",{type_id:data.value,platform_id:platform_id},function(data){
+          $('#platform_id').html(data);
+          form.render('select');
+        });
+      });
+      form.on('submit(set_website)', function(data){
+          $.ajax({
+              type:'POST',
+              url:'{:url("media/update")}',
+              data: {
+                  data:JSON.stringify(data.field)
+              },
+              success:function (data) {
+                  var status = JSON.parse(data);
+                  if (status.icon == 6){
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.parent.location.reload();
+                      });
+                  } else {
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.location.reload();
+                      });
+                  }
+              }
+          });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

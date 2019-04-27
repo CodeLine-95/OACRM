@@ -1,0 +1,101 @@
+<crmblok>
+  <div style="position: relative;">
+    <button class="layui-btn layui-btn-normal" onclick="alert_open('添加待办','{:url('backlog/add')}')"><i class="layui-icon">&#xe608;</i>添加待办</button>
+    <div style="display:inline-block;">
+      <form class="layui-form" method="post">
+        <div class="layui-input-inline">
+          <input type="text" name="value" class="layui-input" lay-verify="required" style="background-color:#eee;border:none;">
+        </div>
+        <button class="layui-btn layui-btn-normal" type="submit"><i class="layui-icon layui-icon-search"></i>搜索</button>
+      </form>
+    </div>
+    <div style="display:inline-block;position: absolute;right: 0;">
+      <label class="layui-form-label" style="width:400px;color:#259B24;">今日待办事项{$todaycount}件，本周待办事项{$weekcount}件，本月待办事项{$monthcount}件</label>
+      <label class="layui-form-label">共有：{:count($backlogs)}条</label>
+    </div>
+  </div>
+</crmblok>
+<table class="layui-table">
+  <thead>
+    <tr>
+      <th align="center" style="width:150px;">创建时间</th>
+      <th align="center" style="width:150px;">待办时间</th>
+      <th align="center" style="width:150px;">执行时间</th>
+      <th align="center">待办事项</th>
+      <th align="center" style="width:50px;">待办人</th>
+      <th align="center" style="width:50px;">创建人</th>
+      <th align="center" style="width:50px;">状态</th>
+      <th align="center" style="width:130px;">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+  {empty name="backlogs"}
+    <tr><td colspan="8" align="center">暂无待办</td></tr>
+  {else}
+  {volist name="backlogs" id="b"}
+    <tr>
+      <td>{:date('Y-m-d H:i:s',$b.creates_time)}</td>
+      <td>{:date('Y-m-d H:i:s',$b.backlog_time)}</td>
+      <td>
+        {if condition="$b.execute_time != 0"}
+          {if condition="($b.execute_time < time()) AND ($b.backlog_status neq 1)"}
+            <label style="color:#ff0000;">{:date('Y-m-d H:i:s',$b.execute_time)}</label>
+          {else}
+            {:date('Y-m-d H:i:s',$b.execute_time)}
+          {/if}
+        {/if}
+      </td>
+      <td>
+        {if condition="$b.read_status == 1"}
+        <a href="javascript:void(0)" onclick="content('{$b.backlog_title}','{$b.backlog_content}','{$b.id}')" style="color:#757272;">{$b.backlog_title}</a>&nbsp;&nbsp;&nbsp;[&nbsp;已读&nbsp;]
+        {else}
+        <a href="javascript:void(0)" onclick="content('{$b.backlog_title}','{$b.backlog_content}','{$b.id}')" style="color:#1E9FFF;">{$b.backlog_title}</a>&nbsp;&nbsp;&nbsp;[&nbsp;未读&nbsp;]
+        {/if}
+      </td>
+      <td>{$b.client_name}</td>
+      <td>{$b.user_name}</td>
+      <td>
+        {switch name="$b.backlog_status"}
+        {case value="0"}<span style="color:#1E9FFF;">未执行</span>{/case}
+        {case value="1"}<span style="color:#259B24;">已执行</span>{/case}
+        {case value="2"}<span style="color:#FF0000;">已超时</span>{/case}
+        {case value="3"}<span style="color:#757272;">不执行</span>{/case}
+        {/switch}
+      </td>
+      <td>
+        <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="alert_open('处理','{:url('backlog/handle',array('id'=>$b.id))}')">处理</button>
+        {if condition="$b.client_id != 0"}
+        <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('{$b.client_name}详情','{:url('followup/index',array('id'=>$b.client_id))}')">客户详情</button>
+        {/if}
+      </td>
+    </tr>
+  {/volist}
+  {/empty}
+  </tbody>
+</table>
+<script type="text/javascript">
+  function alert_open(title,url){
+    layer.open({
+      type: 2,
+      area: ['800px', '400px'],
+      fix: false, //不固定
+      title: title,
+      content: url,
+    });
+  }
+  function content(obj,url,id){
+    $.post("{:url('AjaxAction/backlogStatus')}",{id:id},function(data){
+      layer.open({
+        type: 0,
+        btn:false,
+        area: ['300px', '150px'],
+        shadeClose: true, //开启遮罩关闭
+        content: '</br>&nbsp;&nbsp;&nbsp;'+url,
+        cancel:function(index,layero){
+          layer.close(index);
+          location.reload();
+        }
+      });
+    });
+  }
+</script>

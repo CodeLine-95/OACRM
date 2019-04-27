@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+ <link rel="stylesheet" href="__TROOT__/admin/css/icon.css" media="all">
+ <style media="screen">
+   .layui-table tbody tr:hover{
+    background-color: #fff;
+   }
+   .layui-form-select,.layui-input{
+    width: 100px;
+   }
+   .layui-form-item .layui-input-inline{
+    width: auto;
+   }
+ </style>
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<table class="layui-table">
+  <thead>
+    <tr>
+      <th width="25" align="center">编号</th>
+      <th align="center" style="width:105px;">创建时间</th>
+      <th align="center" style="width:105px;">跟进时间</th>
+      <th align="center" style="width:90px;">姓名</th>
+      <th align="center" style="width:70px;">性别</th>
+      <th align="center" style="width:70px;">地域</th>
+      <th align="center" style="width:125px;">电话</th>
+      <th align="center" style="width:95px;">微信号</th>
+      <th align="center">业务类型</th>
+      <th align="center" style="width:90px;">运营</th>
+      <th align="center" style="width:80px;">销售</th>
+      <th align="center" style="width:90px;">派发客服</th>
+      <th align="center" style="width:90px;">客户状态</th>
+      <th align="center" style="width:161px;">客户星级</th>
+      <th align="center" style="width:90px;">跟进状态</th>
+      <th align="center" style="width:165px;">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+  {empty name="list"}
+    <tr align="center" style="height:300px;"><td colspan="15">暂无客户</td></tr>
+  {else}
+    {foreach $list as $k=>$l}
+      <tr>
+        <td>
+         {$l['id']}
+        </td>
+        <td>{:date('Y-m-d',$l['create_t'])}<br/>{:date('H:i:s',$l['create_t'])}</td>
+        <td>{if condition="$l.last_time == 0"}暂未跟进{else}{:date('Y-m-d',$l['last_time'])}<br/>{:date('H:i:s',$l['last_time'])}{/if}</td>
+        <td>{$l['name']}</td>
+        <td>
+          {$l.sex==1?'男':'女'}
+        </td>
+        <td>{$l['city']}</td>
+        <td>{if condition="$l.phone == ''"}暂无信息{else}<span style="color:#8BC34A;">{:str_replace('+86-','',$l['phone'])}</span>{/if}</td>
+        <td>{if condition="$l.wechat == ''"}暂无信息{else}<span style="color:#259B24;">{$l['wechat']}</span>{/if}</td>
+        <td>{$l.business}</td>
+        <td><span style="color:green;">{$l.operate_name}</span></td>
+        <td>{if condition="$l.service_id == 0"}暂未分配{else}<span style="color:#1E9FFF;">{$l['service_name']}</span>{/if}</td>
+        <td><span style="color:#1E9FFF;">{$l['username']==''?'无或自建':$l['username']}</span></td>
+        <td>{$l.schedule==''?'暂无':$l.schedule} </td>
+        <td><input type="hidden" class="xing" value="{$l['level']}"><div><div id="{$k}"></div></div></td>
+          <td>
+       {switch name="$l.order_id"}
+        {case value="27|28"}<label class="order_name26">未跟进</label>{/case}
+        {case value="29"}<label class="order_name27">已跟进</label>{/case}
+        {default /}<label class="order_name{$l.order_id}">{$l.order_name}</label>
+        {/switch}
+      </td>
+
+        <td> <button onclick="crm_admin_show('{$l.name}-跟进','{:url('followup/index',array('id'=>$l.id))}')" class="layui-btn layui-btn-normal layui-btn-xs">跟进详情</button><br>
+          {if(!empty($implement))}
+         {switch name="$implement"}
+            {case value="ibegunnot"}
+              <button class="layui-btn layui-btn-normal layui-btn-xs" onclick="crm_admin_show('批量派单','{:url('implement',array('id'=>$l.id))}')">创建订单</button><br>
+              <button class="layui-btn layui-btn-normal layui-btn-xs" onclick="crm_admin_show('批量派单','{:url('createxionlist',array('id'=>$l.id))}')">订单列表</button><br>
+            {/case}
+            {case value="ibegunin"}<button class="layui-btn layui-btn-normal layui-btn-xs" onclick="crm_admin_show('批量派单','{:url('createxionlist',array('id'=>$l.id))}')">周期报表</button><br>{/case}
+            {case value="ibegunexit"}<div class="layui-btn layui-btn-normal layui-btn-xs" >结束</div>{/case}
+          {/switch}
+{/if}
+        </td>
+      </tr>
+    {/foreach}
+  {/empty}
+  </tbody>
+</table>
+{$list->render()}
+<script type="text/javascript">
+  function crm_show(title,text,type){
+    layer.open({
+      type: type,
+      area: ['800px', '500px'],
+      fix: false, //不固定
+      title: title,
+      content: text
+    });
+  }
+  layui.use(['rate'],function(){
+    var rate = layui.rate;
+    //半星效果
+    $('.xing').each(function(i){
+      rate.render({elem: '#'+i,value: $(this).val(),half: true,text: false,readonly:true});
+    });
+
+  });
+  function activation(id){
+    layer.confirm("您确定激活该客户吗？",function(){
+      $.ajax({
+        url:"{:url('sales/activation')}",
+        data:{id:id},
+        type:'post',
+        success:function(data){
+          var status = JSON.parse(data);
+          layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+            window.location.reload();
+          });
+        }
+      });
+    });
+  }
+</script>
+
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    function del(id){
+      layer.confirm("您确定删除该客户吗？",function(){
+        $.ajax({
+          url:"{:url('sales/delser')}",
+          data:{id:id},
+          type:'post',
+          success:function(data){
+            var status = JSON.parse(data);
+            layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+              window.location.reload();
+            });
+          }
+        });
+      });
+    }
+    function delAll(){
+      var datas = tableCheck.getData();
+      layer.confirm("确认删除选择的客户吗？",function(){
+        $.ajax({
+          url:"{:url('sales/delser')}",
+          data:{id:datas},
+          type:'post',
+          success:function(data){
+            var status = JSON.parse(data);
+            layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+              window.location.reload();
+            });
+          }
+        });
+      });
+    }
+    // 批量转单
+    function changeorderAll(title,url) {
+      var datas = tableCheck.getData();
+      if (datas != '') {
+        crm_admin_show(title,url+'?id='+datas);
+      }else{
+        layer.msg('请选择后再操作！！',{icon:5,time:1000});
+      }
+    }
+    // 赋值岗位
+    layui.use(['form','element','laydate'], function(){
+      var form = layui.form,element = layui.element,laydate = layui.laydate;
+      laydate.render({elem: '#test6'});
+      // 编辑其他员工信息
+      form.on('select(project_id)', function(data) {
+      var areaId = data.value;
+      $.ajax({
+        url:"{:url('AjaxAction/business')}",
+        data:{id:areaId},
+        type:'post',
+        success:function(data){
+          $("#business").html(data);
+          form.render('select');
+        }
+      });
+    });
+    form.on('select(sectors)', function(data) {
+      var areaId = data.value;
+      $.ajax({
+        url:"{:url('AjaxAction/quar')}",
+        data:{id:areaId},
+        type:'post',
+        success:function(data){
+          $("#quarters_id").html(data);
+          form.render('select');
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

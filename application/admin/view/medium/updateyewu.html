@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">添加业务标签</div>
+          <div class="layui-card-body" pad15>
+
+            <div class="layui-form" wid100 lay-filter="">
+
+              <div class="layui-form-item">
+              <input type="hidden" name="id" value="{$yewu['id']}">
+              <label class="layui-form-label">业务类型</label>
+              <div class="layui-input-inline">
+                <select name="typeid" lay-filter="aihao" id="typeid">
+                  {volist name="list" id="vv"}
+                  <option value="{$vv['id']}" {if condition="$yewu['typeid'] eq $vv['id']"} selected {/if}>{$vv['typename']}</option>
+                  {/volist}
+                </select>
+              </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label">业务标签</label>
+                <div class="layui-input-block">
+                  <input type="text" name="name" value="{$yewu['name']}" class="layui-input" placeholder="在此添加媒介标签">
+                </div>
+              </div>
+
+              <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">标签说明</label>
+                <div class="layui-input-block">
+                  <textarea name="desc" placeholder="请输入标签说明" class="layui-textarea">{$yewu['desc']}</textarea>
+                </div>
+              </div>
+
+
+
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="set_website">提交</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    layui.use(['form','element'], function(){
+      var form = layui.form;
+      element = layui.element;
+      console.log(element)
+      form.on('submit(set_website)', function(data){
+          $.ajax({
+              type:'POST',
+              url:'{:url("medium/updateyewu")}',
+              data: {
+                  data:JSON.stringify(data.field)
+              },
+              success:function (data) {
+                  var status = JSON.parse(data);
+                  if (status.icon == 6){
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.parent.location.reload();
+                      });
+                  } else {
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.location.reload();
+                      });
+                  }
+              }
+          });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+ </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <crmblok>
+        <div style="position: relative;">
+          <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+          <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加排班客服','{:url('service/arrangeadd')}')"><i class="layui-icon">&#xe608;</i>添加排班客服</button>
+        </div>
+      </crmblok>
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th width="25" align="center">
+              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+            </th>
+            <th align="center">姓名</th>
+            <th align="center">起始时间</th>
+            <th align="center">负责项目</th>
+            <th align="center">负责业务</th>
+            <th align="center">今日派单</th>
+            <th align="center">本周派单</th>
+            <th align="center">本月派单</th>
+            <th align="center">本月退单</th>
+            <th align="center">累积派单</th>
+            <th align="center">累积数据</th>
+            <th align="center">状态</th>
+            <th align="center">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        {empty name="list"}
+          <tr align="center" style="height:300px;"><td colspan="11">暂无排班客服</td></tr>
+        {else}
+          {foreach $list as $l}
+            <tr>
+              <td>
+                <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$l.id}'><i class="layui-icon">&#xe605;</i></div>
+              </td>
+              <td>{$l['user_name']}</td>
+              <td>{:date('Y-m-d',$l['start_time'])}</td>
+              <td>{$l['project']}</td>
+              <td>{$l['business']}</td>
+              <td>{$l['todayCount']}</td>
+              <td>{$l['newWeek']}</td>
+              <td>{$l['newmonthCount']}</td>
+              <td>{$l['newmonthBack']}</td>
+              <td>{$l['dispatch']}</td>
+              <td>{$l['allCount']}</td>
+              <td>{if condition="$l['status'] == 1"}正常{else}已暂停{/if}</td>
+              <td>
+                <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('详情','{:url('service/arrangeshow',['id'=>$l['id']])}')">详情</button>
+              	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑','{:url('service/arrangeedit',['id'=>$l['id']])}')">编辑</button>
+              	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del('{$l['id']}')">删除</button>
+                {if condition="$l['status'] == 1"}
+                <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="status(this,'{$l['id']}')">暂停</button>
+                {else}
+                <button class="layui-btn layui-btn-warm layui-btn-sm" onclick="status(this,'{$l['id']}')">已暂停</button>
+                {/if}
+              </td>
+            </tr>
+          {/foreach}
+        {/empty}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script type="text/javascript">
+    //删除
+    function del(id){
+      layer.confirm("您确定删除该值班客服吗？",function(){
+        $.post("{:url('service/arrangedel')}",{id:id},function(data){
+          var status = JSON.parse(data);
+          layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+            window.location.reload();
+          });
+        });
+  		});
+    }
+    //更新暂停状态
+    function status(obj,id){
+      var text = $(obj).text();
+      if (text == '已暂停') {
+        var new_text = '开启';
+      }else{
+        var new_text = '暂停';
+      }
+      layer.confirm("您确定"+new_text+"该值班客服吗？",function(){
+        $.post("{:url('service/arrangestatus')}",{id:id},function(data){
+          var status = JSON.parse(data);
+          layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+            window.location.reload();
+          });
+        });
+  		});
+    }
+  </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">编辑业务类型</div>
+          <div class="layui-card-body" pad15>
+
+            <div class="layui-form" wid100 lay-filter="">
+              <input type="hidden" name="id" value="{$type['id']}">
+              <div class="layui-form-item">
+                <label class="layui-form-label">类型名称</label>
+                <div class="layui-input-block">
+                  <input type="text" name="typename" value="{$type['typename']}" class="layui-input" placeholder="在此添加分类名称">
+                </div>
+              </div>
+
+              <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注说明</label>
+                <div class="layui-input-block">
+                  <textarea name="desc" placeholder="请输入备注说明" class="layui-textarea">{$type['desc']}</textarea>
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+              <label class="layui-form-label">合作状态</label>
+              <div class="layui-input-inline">
+                <select name="type" lay-filter="aihao" id="type">
+                  <option value="1" {if condition="$type['type'] eq 1"} selected {/if}>合作中</option>
+                  <option value="0" {if condition="$type['type'] eq 0"} selected {/if}>暂停合作</option>
+                </select>
+              </div>
+              </div>
+
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="set_website">提交</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    layui.use(['form','element'], function(){
+      var form = layui.form;
+      element = layui.element;
+      console.log(element)
+      form.on('submit(set_website)', function(data){
+          $.ajax({
+              type:'POST',
+              url:'{:url("medium/updatetype")}',
+              data: {
+                  data:JSON.stringify(data.field)
+              },
+              success:function (data) {
+                  var status = JSON.parse(data);
+                  if (status.icon == 6){
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.parent.location.reload();
+                      });
+                  } else {
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.location.reload();
+                      });
+                  }
+              }
+          });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-form">
+          <div class="layui-form-item">
+            <label class="layui-form-label">待办</label>
+            <div class="layui-input-inline" style="position: relative;">
+              <input type="text" name="backlog_time" class="layui-input" placeholder="请点击选择时间" id="backlog_time"><i class="layui-icon" style="position: absolute;right: 10px;top: 12px;">&#xe637;</i>
+            </div>
+            <div class="layui-input-inline">
+              <input type="text" name="backlog_title" class="layui-input" placeholder="输入待办事项">
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label" for="backlog_content">待办备注</label>
+            <div class="layui-input-block">
+              <textarea name="backlog_content" id="backlog_content" class="layui-textarea" style="resize: none;" placeholder="待办备注"></textarea>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              <button class="layui-btn" lay-submit lay-filter="add">提交</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    layui.use(['form','element','laydate'], function(){
+      var form = layui.form,element = layui.element,laydate = layui.laydate;
+      //日期实例
+      laydate.render({
+        elem:"#backlog_time",
+        type: 'datetime'
+      })
+      form.on('submit(add)', function(data){
+        $.ajax({
+          type:'POST',
+          url:'{:url("backlog/add")}',
+          data: {
+            data:JSON.stringify(data.field)
+          },
+          success:function (data) {
+            var status = JSON.parse(data);
+            if (status.icon == 6){
+              layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                window.parent.location.reload();
+              });
+            } else {
+              layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                window.location.reload();
+              });
+            }
+          }
+        });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

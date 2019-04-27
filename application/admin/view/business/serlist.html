@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+   .layui-form-select{
+     width: 100px;
+   }
+   .layui-unselect{
+     background-color: #eee;
+   }
+   .layui-form-selected dl{
+     background-color: #eee;
+   }
+ </style>
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+        <crmblok>
+          <div style="position: relative;">
+            <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+            <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加服务内容','{:url('business/seradd')}')"><i class="layui-icon">&#xe608;</i>添加服务内容</button>
+            <form class="layui-form" method="post" style="display:inline-block;position: absolute;right: 0;">
+              <div class="layui-input-inline">
+                <select name="business_id">
+                    <option value="0" {if condition="$selected == 0"}selected{/if}>所有业务</option>
+                    {foreach $business as $b}
+                    <option value="{$b.id}" {if condition="$selected == $b.id"}selected{/if}>{$b.name}</option>
+                    {/foreach}
+                </select>
+              </div>
+              <div class="layui-input-inline">
+                <input type="text" name="value" class="layui-input" style="background-color:#eee;border:none;">
+              </div>
+              <button class="layui-btn layui-btn-normal" type="submit"><i class="layui-icon layui-icon-search"></i>搜索</button>
+            </form>
+          </div>
+        </crmblok>
+        <table class="layui-table layui-form">
+          <thead>
+            <tr>
+              <th width="25" align="center">
+                <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+              </th>
+              <th align="center" style="width:200px;">服务名称</th>
+              <th align="center" style="width:200px;">所属业务</th>
+              <th align="center">服务内容</th>
+              <th align="center" style="width:200px;">所属项目</th>
+              <th align="center" style="width:60px;">状态</th>
+              <th align="center" style="width:100px;">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {empty name="servers"}
+              <tr align="center" style="height:500px;"><td colspan="11">暂无服务内容</td></tr>
+          {else}
+            {foreach $servers as $s}
+              <tr>
+                <td>
+                  <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$s.id}'><i class="layui-icon">&#xe605;</i></div>
+                </td>
+                <td>{$s['name']}</td>
+                <td>{$s['business']}</td>
+                <td><label style="color:#259B24;">{$s['description']}</label></td>
+                <td>{$s['project']}</td>
+                <td>
+                  {switch name="$s.status"}
+                  {case value="1"}<button class="layui-btn layui-btn-normal layui-btn-xs">运行</button>{/case}
+                  {case value="2"}<button class="layui-btn layui-btn-danger layui-btn-xs">暂停</button>{/case}
+                  {case value="3"}<button class="layui-btn layui-btn-warm layui-btn-xs">筹备</button>{/case}
+                  {/switch}
+                </td>
+                <td>
+                  <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑','{:url('business/seredit',array('id'=>$s.id))}')"><i class="layui-icon"></i></button>
+                  <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del({$s['id']})"><i class="layui-icon"></i></button>
+                </td>
+              </tr>
+            {/foreach}
+          {/empty}
+          </tbody>
+        </table>
+        <script type="text/javascript">
+          function delAll () {
+            var data = tableCheck.getData();
+            layer.confirm('确认要删除'+data+'吗？',function(index){
+              $.get("{:url('business/serdel')}?id="+data,function(data){
+                var message = JSON.parse(data);
+                if (message.icon == 6){
+                    layer.msg(message.msg,{icon: message.icon,time:1000},function () {
+                        location.href=location.href
+                   });
+                } else {
+                    layer.msg(message.msg,{icon: message.icon,time:1000});
+                }
+              })
+            });
+          }
+
+          function del(id){
+            layer.confirm('确认要删除吗？',function(){
+              $.get("{:url('business/serdel')}?id="+id,function(data){
+                var message = JSON.parse(data);
+                if (message.icon == 6){
+                    layer.msg(message.msg,{icon: message.icon,time:1000},function () {
+                        location.href=location.href
+                   });
+                } else {
+                    layer.msg(message.msg,{icon: message.icon,time:1000});
+                }
+              })
+            })
+          }
+        </script>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+<style>
+  .layui-form-label {
+    float: left;
+    display: block;
+    padding: 9px 15px;
+    width: 80px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+.layui-card-body {
+    position: relative;
+    padding: 10px 15px;
+    line-height: 38px;
+}
+</style>
+ <style>
+  /* 这段样式只是用于演示 */
+  #component-anim .layui-card-body{padding: 15px;}
+
+  #component-anim .component-anim-demo{margin-bottom: 50px; font-size: 0;}
+  #component-anim .component-anim-demo li{display: inline;font-size: 14px; text-align: center;}
+  #component-anim .component-anim-demo li .layui-icon{display: inline-block; font-size: 36px;}
+
+  #component-anim .component-anim-demo li .fontclass{display: none;}
+  #component-anim .component-anim-demo li .name{color: #c2c2c2;}
+  #component-anim .component-anim-demo li:hover{background-color: #f2f2f2; color: #000;}
+
+  #component-anim .component-anim-demo li{width: 222px;}
+  #component-anim .component-anim-demo .layui-anim{width: 150px; height: 200px; line-height: 150px; margin: 0 auto 10px; text-align: center; background-color: #d2d2d2; cursor: pointer; color:red;}
+  </style>
+</head>
+<body onload="members()">
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          {empty name="member"}
+          <crmblok>
+          <div style="position: relative;">
+            <button class="layui-btn"></button>
+            <form class="layui-form" method="post" style="display:inline-block;position: absolute;left: 0;">
+
+              <div class="layui-input-inline">
+                <input type="text" name="name" class="layui-input" placeholder="请输入查询姓名">
+              </div>
+              <div class="layui-input-inline">
+                <input type="text" name="tel" class="layui-input" placeholder="请输入查询手机号">
+              </div>
+              <div class="layui-input-inline">
+                <select name="sectors_id" id="sectors_id" lay-search lay-filter="sectors_id">
+                  <option value="">选择部门</option>
+				          {volist name="sectors" id="vv"}
+                     <option value="{$vv['id']}">{$vv['name']}</option>
+				          {/volist}
+                </select>
+              </div>
+              <div class="layui-input-inline">
+                <select name="quarters_id" id="quarters_id">
+                  <option value="">选择职位</option>
+                </select>
+              </div>
+
+              <button class="layui-btn layui-btn-normal" type="submit"><i class="layui-icon layui-icon-search"></i>搜索</button>
+            </form>
+          </div>
+        </crmblok>
+        {/empty}
+        {notempty name="list"}
+        <table class="layui-table">
+          <thead>
+            <tr>
+              <th align="center"></th>
+              <th align="center">工号</th>
+              <th align="center">姓名</th>
+              <th align="center">手机号</th>
+              <th align="center">性别</th>
+              <th align="center">籍贯</th>
+              <th align="center">身份证号</th>
+              <th align="center">创建时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            {foreach $list as $l}
+              <tr>
+                <td>
+                  <a href="{:url('AjaxAction/user',['id'=>$l['id']])}"><button class="layui-btn layui-btn-normal layui-btn-xs" onclick="">选中</button></a>
+                </td>
+                <td>{$l['staff_num']}</td>
+                <td>{$l['user_name']}</td>
+                <td>{$l['staff_tel']}</td>
+                <td>{if condition="$l['staff_sex'] eq 0"}男{else}女{/if}</td>
+                <td>{$l['staff_province']}</td>
+                <td>{$l['staff_idcard']}</td>
+                <td>{$l['create_time']}</td>
+              </tr>
+            {/foreach}
+
+          </tbody>
+        </table>
+        {/notempty}
+          <div class="layui-card-header">个人信息</div>
+          {empty name="member"}
+          <div class="layui-form layui-card-body" pad15>
+              <div class="layui-form-item layui-form-text">
+                <h3 style="text-align:center;width: 95%;height: 40px;line-height: 40px;border-bottom: 2px solid #d2d2d2;margin: 0 auto;">个人信息</h3>
+              </div>
+               <div class="layui-form-item member1">
+                <label class="layui-form-label" for="user_name">员工工号</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_num']}
+                </div>
+
+                <label class="layui-form-label" for="user_name">员工姓名</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['user_name']"}
+                  {$admin['user_name']}
+                  {else}
+                  暂未填写员工姓名
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_idcard">身份证号</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['staff_idcard']"}
+                  {$admin['staff_idcard']}
+                  {else}
+                  暂未填写手机号码
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_province">籍贯省份</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['staff_province']"}
+                  {$admin['staff_province']}
+                  {else}
+                  {/notempty}
+                </div>
+				</div>
+
+              <div class="layui-form-item member1">
+
+
+                <label class="layui-form-label" for="home_address">家乡地址</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['home_address']"}
+                  {$admin['home_address']}
+                  {else}
+                  暂未填写家乡地址
+                  {/notempty}
+                </div>
+
+
+                <label class="layui-form-label" for="staff_tel">个人手机</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['staff_tel']"}
+                  {$admin['staff_tel']}
+                  {else}
+                  暂未填写个人手机
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_wechat">个人微信</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['staff_wechat']"}
+                  {$admin['staff_wechat']}
+                  {else}
+                  暂未填写个人微信
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_email">个人邮箱</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['staff_email']"}
+                  {$admin['staff_email']}
+                  {else}
+                  暂未填写个人邮箱
+                  {/notempty}
+                </div>
+              </div>
+
+              <div class="layui-form-item member1">
+                <label class="layui-form-label" for="staff_qq">个人QQ</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['staff_qq']"}
+                  {$admin['staff_qq']}
+                  {else}
+                  暂未填写个人QQ
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_school">毕业院校</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['staff_school']"}
+                  {$admin['staff_school']}
+                  {else}
+                  暂未填写毕业院校
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_wechat">员工学历</label>
+                <div class="layui-input-inline">
+                  {if condition="$admin['staff_education'] eq 1"} 博士
+                  {elseif condition="$admin['staff_education'] eq 2"} 硕士
+                  {elseif condition="$admin['staff_education'] eq 3"} 研究生
+                  {elseif condition="$admin['staff_education'] eq 4"} 本科
+                  {elseif condition="$admin['staff_education'] eq 5"} 大专
+                  {elseif condition="$admin['staff_education'] eq 6"} 中专
+                  {elseif condition="$admin['staff_education'] eq 7"} 高中
+                  {elseif condition="$admin['staff_education'] eq 8"} 初中
+                  {elseif condition="$admin['staff_education'] eq 9"} 小学
+                  {/if}
+                </div>
+
+                <label class="layui-form-label" for="staff_email">上家公司</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['staff_before_firm']"}
+                  {$admin['staff_before_firm']}
+                  {else}
+                  暂未填写上家公司
+                  {/notempty}
+                </div>
+
+
+              </div>
+
+			  <div class="layui-form-item member1">
+                <label class="layui-form-label" for="staff_qq">现居地址</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['staff_now_address']"}
+                  {$admin['staff_now_address']}
+                  {else}
+                  暂未填写现居地址
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="exigency">紧急联系人</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['exigency']"}
+                  {$admin['exigency']}
+                  {else}
+                  暂未填写紧急联系人
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_qq">紧急关系</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['exigencyabout']"}
+                  {$admin['exigencyabout']}
+                  {else}
+                  暂未填写紧急关系
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_qq">紧急电话</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['exigencytel']"}
+                  {$admin['exigencytel']}
+                  {else}
+                  暂未填写紧急电话
+                  {/notempty}
+                </div>
+
+			  </div>
+
+              <div class="layui-form-item member1">
+                <label class="layui-form-label" for="exigencyaddress">紧急地址</label>
+                <div class="layui-input-inline">
+                  {notempty name="$admin['exigencyaddress']"}
+                  {$admin['exigencyaddress']}
+                  {else}
+                  暂未填写紧急地址
+                  {/notempty}
+                </div>
+              </div>
+
+              <div class="layui-form-item member1">
+                <label class="layui-form-label" for="user_introduce">个人爱好</label>
+                <div class="layui-input-block">
+                  {volist name="$adminhobby" id="vv"}
+                  &nbsp;{$vv}&nbsp;&nbsp;&nbsp;
+                  {/volist}
+                </div>
+              </div>
+
+          </div>
+          {else}
+          <div class="layui-form layui-card-body layui-fluid" id="component-anim" pad15>
+              <div class="layui-form-item layui-form-text">
+                <h3 style="text-align:center;width: 95%;height: 40px;line-height: 40px;border-bottom: 2px solid #d2d2d2;margin: 0 auto;">个人信息<button class="layui-btn layui-btn-sm" style="float: right;" id="member1">编辑</button></h3>
+              </div>
+              <input type="hidden" id="members1" value="1">
+              <input type="hidden" name="id" id="memberid" value="{$member['id']}">
+              <input type="hidden" name="quarters_id" id="quarters_id" value="{$member['quarters_id']}">
+               <div class="layui-form-item member1">
+                <label class="layui-form-label" for="staff_num">员工工号</label>
+                <div class="layui-input-inline">
+                  {$member['staff_num']}
+                </div>
+
+                <label class="layui-form-label" for="user_name">员工姓名</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['user_name']"}
+                  {$member['user_name']}
+                  {else}
+                  暂未填写员工姓名
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_idcard">身份证号</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['staff_idcard']"}
+                  {$member['staff_idcard']}
+                  {else}
+                  暂未填写身份证号
+                  {/notempty}
+                </div>
+
+
+
+                <label class="layui-form-label" for="staff_province">籍贯省份</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['staff_province']"}
+                  {$member['staff_province']}
+                  {else}
+                  暂未填写籍贯省份
+                  {/notempty}
+                </div>
+
+
+
+
+				</div>
+
+              <div class="layui-form-item member1">
+
+
+                <label class="layui-form-label" for="home_address">家乡地址</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['home_address']"}
+                  {$member['home_address']}
+                  {else}
+                  暂未填写家乡地址
+                  {/notempty}
+                </div>
+
+
+                <label class="layui-form-label" for="staff_tel">个人手机</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['staff_tel']"}
+                  {$member['staff_tel']}
+                  {else}
+                  暂未填写个人手机
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_wechat">个人微信</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['staff_wechat']"}
+                  {$member['staff_wechat']}
+                  {else}
+                  暂未填写个人微信
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_email">个人邮箱</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['staff_email']"}
+                  {$member['staff_email']}
+                  {else}
+                  暂未填写个人邮箱
+                  {/notempty}
+                </div>
+              </div>
+
+              <div class="layui-form-item member1">
+                <label class="layui-form-label" for="staff_qq">个人QQ</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['staff_qq']"}
+                  {$member['staff_qq']}
+                  {else}
+                  暂未填写个人QQ
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_school">毕业院校</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['staff_school']"}
+                  {$member['staff_school']}
+                  {else}
+                  暂未填写毕业院校
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_education">员工学历</label>
+                <div class="layui-input-inline">
+                  {if condition="$member['staff_education'] eq 1"} 博士
+                  {elseif condition="$member['staff_education'] eq 2"} 硕士
+                  {elseif condition="$member['staff_education'] eq 3"} 研究生
+                  {elseif condition="$member['staff_education'] eq 4"} 本科
+                  {elseif condition="$member['staff_education'] eq 5"} 大专
+                  {elseif condition="$member['staff_education'] eq 6"} 中专
+                  {elseif condition="$member['staff_education'] eq 7"} 高中
+                  {elseif condition="$member['staff_education'] eq 8"} 初中
+                  {elseif condition="$member['staff_education'] eq 9"} 小学
+                  {/if}
+                </div>
+
+                <label class="layui-form-label" for="staff_before_firm">上家公司</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['staff_before_firm']"}
+                  {$member['staff_before_firm']}
+                  {else}
+                  暂未填写上家公司
+                  {/notempty}
+                </div>
+
+
+              </div>
+
+			  <div class="layui-form-item member1">
+                <label class="layui-form-label" for="staff_qq">现居地址</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['staff_now_address']"}
+                  {$member['staff_now_address']}
+                  {else}
+                  暂未填写现居地址
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="exigency">紧急联系人</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['exigency']"}
+                  {$member['exigency']}
+                  {else}
+                  暂未填写紧急联系人
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_qq">紧急关系</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['exigencyabout']"}
+                  {$member['exigencyabout']}
+                  {else}
+                  暂未填写紧急关系
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_qq">紧急电话</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['exigencytel']"}
+                  {$member['exigencytel']}
+                  {else}
+                  暂未填写紧急电话
+                  {/notempty}
+                </div>
+
+			  </div>
+
+              <div class="layui-form-item member1">
+                <label class="layui-form-label" for="exigencyaddress">紧急地址</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['exigencyaddress']"}
+                  {$member['exigencyaddress']}
+                  {else}
+                  暂未填写紧急地址
+                  {/notempty}
+                </div>
+              </div>
+
+              <div class="layui-form-item member1">
+                <label class="layui-form-label" for="user_introduce">个人爱好</label>
+                <div class="layui-input-block">
+                  {volist name="$staff_hobby" id="vv"}
+                  &nbsp;{$vv}&nbsp;&nbsp;&nbsp;
+                  {/volist}
+                </div>
+              </div>
+              <!-- 333333 -->
+              <div class="layui-form-item member2"  style="display: none;">
+                <label class="layui-form-label" for="user_name">员工工号</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_num" readonly class="layui-input" value="{$member['staff_num']}">
+                </div>
+
+                <label class="layui-form-label" for="user_name">员工姓名</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="user_name" id="user_name" lay-verify="user_name|required" class="layui-input" value="{$member['user_name']}">
+                </div>
+
+                <label class="layui-form-label" for="staff_idcard">身份证号</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_idcard" id="staff_idcard" lay-verify="staff_idcard|required" class="layui-input" value="{$member['staff_idcard']}">
+                </div>
+
+                <label class="layui-form-label" for="staff_province">籍贯省份</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_province" id="staff_province" lay-verify="staff_province|required" class="layui-input" value="{$member['staff_province']}">
+                </div>
+
+
+        </div>
+        <div class="layui-form-item member2"  style="display: none;">
+
+                <label class="layui-form-label" for="home_address">家乡地址</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="home_address" id="home_address" lay-verify="home_address|required" lay-verify="required" class="layui-input" value="{$member['home_address']}">
+                </div>
+
+                <label class="layui-form-label" for="staff_tel">个人手机</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_tel" id="staff_tel" lay-verify="staff_tel|required" class="layui-input" value="{$member['staff_tel']}">
+                </div>
+
+                <label class="layui-form-label" for="staff_wechat">个人微信</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_wechat" id="staff_wechat" lay-verify="staff_wechat|required" class="layui-input" value="{$member['staff_wechat']}">
+                </div>
+
+                <label class="layui-form-label" for="staff_email">个人邮箱</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_email" id="staff_email" lay-verify="staff_email|required" class="layui-input" value="{$member['staff_email']}">
+                </div>
+
+        </div>
+
+        <div class="layui-form-item member2" style="display: none;">
+
+                <label class="layui-form-label" for="staff_qq">个人QQ</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_qq" id="staff_qq" lay-verify="staff_qq|required" lay-verify="required" class="layui-input" value="{$member['staff_qq']}">
+                </div>
+
+
+                <label class="layui-form-label" for="staff_school">毕业院校</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_school" id="staff_school" lay-verify="staff_school|required" class="layui-input" value="{$member['staff_school']}">
+                </div>
+
+                <label class="layui-form-label" for="staff_education">员工学历</label>
+                <div class="layui-input-inline">
+                  <select class="layui-input" name="staff_education" id="staff_education" lay-verify="staff_education|required">
+                    <option value="1" {if condition="$member['staff_education'] eq 1"} selected {/if}>博士</option>
+                    <option value="2" {if condition="$member['staff_education'] eq 2"} selected {/if}>硕士</option>
+                    <option value="3" {if condition="$member['staff_education'] eq 3"} selected {/if}>研究生</option>
+                    <option value="4" {if condition="$member['staff_education'] eq 4"} selected {/if}>本科</option>
+                    <option value="5" {if condition="$member['staff_education'] eq 5"} selected {/if}>大专</option>
+                    <option value="6" {if condition="$member['staff_education'] eq 6"} selected {/if}>中专</option>
+                    <option value="7" {if condition="$member['staff_education'] eq 7"} selected {/if}>高中</option>
+                    <option value="8" {if condition="$member['staff_education'] eq 8"} selected {/if}>初中</option>
+                    <option value="9" {if condition="$member['staff_education'] eq 9"} selected {/if}>小学</option>
+                  </select>
+                </div>
+
+                <label class="layui-form-label" for="staff_before_firm">上家公司</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_before_firm" id="staff_before_firm" lay-verify="staff_before_firm|required" class="layui-input" value="{$member['staff_before_firm']}">
+                </div>
+        </div>
+
+        <div class="layui-form-item member2" style="display: none;">
+
+
+                <label class="layui-form-label" for="staff_now_address">现居地址</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_now_address" id="staff_now_address" lay-verify="staff_now_address|required" lay-verify="required" class="layui-input" value="{$member['staff_now_address']}">
+                </div>
+
+                <label class="layui-form-label" for="exigency">紧急联系人</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="exigency" id="exigency" lay-verify="exigency|required" class="layui-input" value="{$member['exigency']}">
+                </div>
+
+                <label class="layui-form-label" for="exigencyabout">紧急关系</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="exigencyabout" id="exigencyabout" lay-verify="exigencyabout|required" class="layui-input" value="{$member['exigencyabout']}">
+                </div>
+
+                <label class="layui-form-label" for="exigencytel">紧急电话</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="exigencytel" id="exigencytel" lay-verify="exigencytel|required" class="layui-input" value="{$member['exigencytel']}">
+                </div>
+        </div>
+        <div class="layui-form-item member2" style="display: none;">
+                <label class="layui-form-label" for="user_name">紧急地址</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="exigencyaddress" id="exigencyaddress" lay-verify="exigencyaddress|required" lay-verify="required" class="layui-input" value="{$member['exigencyaddress']}">
+                </div>
+
+        </div>
+
+        <div class="layui-form-item member2" style="display: none;">
+          <label class="layui-form-label" for="user_introduce">个人爱好</label>
+          <div class="layui-input-block">
+                  <input type="checkbox" name="staff_hobby" value="旅游" title="旅游" {if condition="in_array('旅游',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="阅读" title="阅读"  {if condition="in_array('阅读',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="电影" title="电影" {if condition="in_array('电影',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="聚会" title="聚会" {if condition="in_array('聚会',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="唱歌" title="唱歌" {if condition="in_array('唱歌',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="交友" title="交友" {if condition="in_array('交友',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="摄影" title="摄影" {if condition="in_array('摄影',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="球类" title="球类" {if condition="in_array('球类',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="逛街" title="逛街" {if condition="in_array('逛街',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="爬山" title="爬山" {if condition="in_array('爬山',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="宅家" title="宅家" {if condition="in_array('宅家',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="下棋" title="下棋" {if condition="in_array('下棋',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="书画" title="书画" {if condition="in_array('书画',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="荣誉" title="荣誉" {if condition="in_array('荣誉',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="面子" title="面子" {if condition="in_array('面子',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="喝酒" title="喝酒" {if condition="in_array('喝酒',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="喝茶" title="喝茶" {if condition="in_array('喝茶',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="吃货" title="吃货" {if condition="in_array('吃货',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="运动" title="运动" {if condition="in_array('运动',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="美容" title="美容" {if condition="in_array('美容',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="钱财" title="钱财" {if condition="in_array('钱财',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="美女" title="美女" {if condition="in_array('美女',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="收藏" title="收藏" {if condition="in_array('收藏',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="集邮" title="集邮" {if condition="in_array('集邮',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="游戏" title="游戏" {if condition="in_array('游戏',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="瑜伽" title="瑜伽" {if condition="in_array('瑜伽',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="舞蹈" title="舞蹈" {if condition="in_array('舞蹈',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="跑步" title="跑步" {if condition="in_array('跑步',$staff_hobby) eq true"} checked {/if}>
+                  <input type="checkbox" name="staff_hobby" value="武术" title="武术" {if condition="in_array('武术',$staff_hobby) eq true"} checked {/if}>
+                </div>
+        </div>
+
+
+              <!-- 个人信息结束 -->
+              <script>
+                $("#member1").click(function(){
+                  var member = $("#members1").val();
+                  if(member==1){
+                    $(".member1").hide();
+                    $(".member2").show();
+                    $("#member1").html("保存");
+                    $("#members1").attr("value","2");
+                  }else{
+                    $(".member1").show();
+                    $(".member2").hide();
+                    $("#member1").html("编辑");
+                    $("#members1").attr("value","1");
+                    var dataarr = {};
+                    dataarr.user_name = $("#user_name").val();
+                    dataarr.staff_idcard = $("#staff_idcard").val();
+                    dataarr.staff_province = $("#staff_province").val();
+                    dataarr.home_address = $("#home_address").val();
+                    dataarr.staff_tel = $("#staff_tel").val();
+                    dataarr.staff_wechat = $("#staff_wechat").val();
+                    dataarr.staff_email = $("#staff_email").val();
+                    dataarr.staff_qq = $("#staff_qq").val();
+                    dataarr.staff_school = $("#staff_school").val();
+                    dataarr.staff_education = $("#staff_education").val();
+                    dataarr.staff_before_firm = $("#staff_before_firm").val();
+                    dataarr.staff_now_address = $("#staff_now_address").val();
+                    dataarr.exigency = $("#exigency").val();
+                    dataarr.exigencyabout = $("#exigencyabout").val();
+                    dataarr.exigencytel = $("#exigencytel").val();
+                    dataarr.exigencyaddress = $("#exigencyaddress").val();
+                    dataarr.staff_hobby = returnCheckboxItem("staff_hobby");
+                    dataarr.memberid = $("#memberid").val();
+                    dataarr.updatetype = 1;
+                    $.ajax({
+                      url:"{:url('AjaxAction/updateuser')}",
+                      traditional :true,
+                      data:{dataarr:JSON.stringify(dataarr)},
+                      type:'post',
+                      dataType:'json',
+                      success:function(data){
+                        layer.msg('正在处理，请稍候', {icon: 16,shade: 0.01});
+                        var data = JSON.parse(data);
+                        layer.msg(data.msg,{icon:data.icon,time:1000},function(){window.location.reload();});
+                      }
+                    });
+                  }
+                });
+              </script>
+              <!-- 11111111111 -->
+              <!-- 职业规划开始 -->
+              <div class="layui-form-item layui-form-text">
+                <h3 style="text-align:center;width: 95%;height: 40px;line-height: 40px;border-bottom: 2px solid #d2d2d2;margin: 0 auto;">职业规划<button class="layui-btn layui-btn-sm" style="float: right;" id="member3">编辑</button></h3>
+              </div>
+              <input type="hidden" name="members2" id="members2" value="1">
+              <input type="hidden" name="staff_skills2" value="{$staff_skills2}" id="staff_skills2" >
+              <div class="layui-form-item member4">
+          			<label class="layui-form-label" for="tags">擅长技能</label>
+          			<div class="layui-input-block">
+                  {volist name="staff_skills" id="vv"}
+                  &nbsp;{$vv}&nbsp;&nbsp;&nbsp;
+                  {/volist}
+          			</div>
+          		</div>
+              <div class="layui-form-item member4">
+          			<label class="layui-form-label" for="staff_direction">发展方向</label>
+          			<div class="layui-input-block">
+                  {notempty name="$member['staff_direction']"}
+          				{$member['staff_direction']}
+                  {else}
+                  暂未填写发展方向
+                  {/notempty}
+          			</div>
+          		</div>
+
+
+				<div class="layui-form-item member5" style="display: none;">
+          			<label class="layui-form-label" for="tags">擅长技能</label>
+          			<div class="layui-input-block tags" id="tags">
+		                  {volist name="staff_skills" id="vv"}
+		                  <span><em>{$vv}</em><button type='button' class='close'>×</button></span>
+		                  {/volist}
+          				<input type="text" id="inputTags" class="layui-input" placeholder="回车生成技能标签" autocomplete="off" value="">
+          				<input type="hidden" name="staff_skills" id="staff_skills" value="{$staff_skills2}" lay-verify="staff_skills|required">
+
+          			</div>
+          		</div>
+          		<div class="layui-form-item member5" style="display: none;">
+          			<label class="layui-form-label" for="staff_direction">发展方向</label>
+          			<div class="layui-input-block">
+          				<textarea name="staff_direction" id="staff_direction" class="layui-textarea" lay-verify="staff_direction|required">{$member['staff_direction']}</textarea>
+          			</div>
+          		</div>
+
+
+              <!-- 职业规划结束 -->
+
+				<script>
+                $("#member3").click(function(){
+                  var member = $("#members2").val();
+                  if(member==1){
+                    $(".member4").hide();
+                    $(".member5").show();
+                    $("#member3").html("保存");
+                    $("#members2").attr("value","2");
+                  }else{
+                    $(".member4").show();
+                    $(".member5").hide();
+                    $("#member3").html("编辑");
+                    $("#members2").attr("value","1");
+                    var dataarr = {};
+                    dataarr.staff_skills = $("#staff_skills2").val()+"," + $("#staff_skills").val();
+                    dataarr.staff_direction = $("#staff_direction").val();
+                    dataarr.memberid = $("#memberid").val();
+                    dataarr.updatetype = 2;
+                    console.log(dataarr);
+                    $.ajax({
+                      url:"{:url('AjaxAction/updateuser')}",
+                      traditional :true,
+                      data:{dataarr:JSON.stringify(dataarr)},
+                      type:'post',
+                      dataType:'json',
+                      success:function(data){
+                        layer.msg('正在处理，请稍候', {icon: 16,shade: 0.01});
+                        var data = JSON.parse(data);
+                        layer.msg(data.msg,{icon:data.icon,time:1000},function(){window.location.reload();});
+                      }
+                    });
+                  }
+                });
+              </script>
+
+			  <!-- 电子附件开始 -->
+
+              <div class="layui-form-item layui-form-text">
+                <h3 style="text-align:center;width: 95%;height: 40px;line-height: 40px;border-bottom: 2px solid #d2d2d2;margin: 0 auto;">电子附件<button class="layui-btn layui-btn-sm" style="float: right;"  id="member6">编辑</button></h3>
+              </div>
+			  <input type="hidden" name="members3" id="members3" value="1">
+              <div class="layui-form-item member6">
+                <label class="layui-form-label" for="staff_direction"></label>
+                <div class="layui-input-block">
+                  <ul class="component-anim-demo">
+                    <li>
+                    <label class="layui-form-label" for="staff_qq"></label>
+                    <div class="layui-input-inline">
+                      <div class="layui-anim" data-anim="layui-anim-scaleSpring">
+                      	<img src="{$member['frontcard']}"  alt="" style="width:100%;height:100%;">
+                      </div>
+                      <div class="code" style="display: block!important;">身份证正面</div>
+                    </div>
+                  </li>
+                    <li>
+                    <label class="layui-form-label" for="staff_qq"></label>
+                    <div class="layui-input-inline">
+                      <div class="layui-anim" data-anim="layui-anim-scaleSpring">
+                      	<img src="{$member['versocard']}"  alt="" style="width:100%;height:100%;">
+                      </div>
+                      <div class="code" style="display: block!important;">身份证反面</div>
+                    </div>
+                  </li>
+                    <li>
+                    <label class="layui-form-label" for="staff_qq"></label>
+                    <div class="layui-input-inline">
+                      <div class="layui-anim" data-anim="layui-anim-scaleSpring">
+                      	<img src="{$member['diploma']}"  alt="" style="width:100%;height:100%;">
+                      </div>
+                      <div class="code" style="display: block!important;">毕业证书</div>
+                    </div>
+                  </li>
+                    <li>
+                    <label class="layui-form-label" for="staff_qq"></label>
+                    <div class="layui-input-inline">
+                      <div class="layui-anim" data-anim="layui-anim-scaleSpring">
+                      	<img src="{$member['dimission']}" alt="" style="width:100%;height:100%;">
+                      </div>
+                      <div class="code1" style="display: block!important;">离职证明</div>
+                    </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="layui-form-item member7"  style="display: none;">
+                <label class="layui-form-label" for="staff_direction"></label>
+                <div class="layui-input-block">
+                  <ul class="component-anim-demo">
+                    <li>
+                    <label class="layui-form-label" for="staff_qq"></label>
+                    <div class="layui-input-inline">
+                      <div class="layui-anim" data-anim="layui-anim-scaleSpring">
+                      	<img src="{$member['frontcard']}" id="user_faces1" alt="" style="width:100%;height:100%;">
+                      </div>
+                      <div class="code" style="display: block!important;">身份证正面</div>
+                      <div class="code" style="display: block!important;"><button class="layui-btn layui-btn-sm layui-btn-normal" id="user_face1">点击上传</button></div>
+                     <input type="hidden" name="user_face1" class="layui-input" value="{$member['frontcard']}">
+                    </div>
+                  </li>
+                    <li>
+                    <label class="layui-form-label" for="staff_qq"></label>
+                    <div class="layui-input-inline">
+                      <div class="layui-anim" data-anim="layui-anim-scaleSpring">
+                      	<img src="{$member['versocard']}" id="user_faces2" alt="" style="width:100%;height:100%;">
+                      </div>
+                      <div class="code" style="display: block!important;">身份证反面</div>
+                      <div class="code" style="display: block!important;"><button class="layui-btn layui-btn-sm layui-btn-normal" id="user_face2">点击上传</button></div>
+                      <input type="hidden" name="user_face2" class="layui-input" value="{$member['versocard']}">
+                    </div>
+                  </li>
+                    <li>
+                    <label class="layui-form-label" for="staff_qq"></label>
+                    <div class="layui-input-inline">
+                      <div class="layui-anim" data-anim="layui-anim-scaleSpring">
+                      	<img src="{$member['diploma']}" id="user_faces3" alt="" style="width:100%;height:100%;">
+                      </div>
+                      <div class="code" style="display: block!important;">毕业证书</div>
+                      <div class="code" style="display: block!important;"><button class="layui-btn layui-btn-sm layui-btn-normal" id="user_face3">点击上传</button></div>
+                      <input type="hidden" name="user_face3" class="layui-input" value="{$member['diploma']}">
+                    </div>
+                  </li>
+                    <li>
+                    <label class="layui-form-label" for="staff_qq"></label>
+                    <div class="layui-input-inline">
+                      <div class="layui-anim" data-anim="layui-anim-scaleSpring">
+                      	<img src="{$member['dimission']}" id="user_faces4" alt="" style="width:100%;height:100%;">
+                      </div>
+                      <div class="code1" style="display: block!important;">离职证明</div>
+                      <div class="code" style="display: block!important;"><button class="layui-btn layui-btn-sm layui-btn-normal" id="user_face4">点击上传</button></div>
+                      <input type="hidden" name="user_face4" class="layui-input" value="{$member['dimission']}">
+                    </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- 电子附件结束 -->
+			  <script>
+                $("#member6").click(function(){
+                  var member = $("#members3").val();
+                  if(member==1){
+                    $(".member6").hide();
+                    $(".member7").show();
+                    $("#member6").html("保存");
+                    $("#members3").attr("value","2");
+                  }else{
+                    $(".member6").show();
+                    $(".member7").hide();
+                    $("#member6").html("编辑");
+                    $("#members3").attr("value","1");
+                    var dataarr = {};
+                    dataarr.frontcard = $("input[name='user_face1']").val();
+                    dataarr.versocard = $("input[name='user_face2']").val();
+                    dataarr.diploma = $("input[name='user_face3']").val();
+                    dataarr.dimission = $("input[name='user_face4']").val();
+                    dataarr.memberid = $("#memberid").val();
+                    dataarr.updatetype = 3;
+                    console.log(dataarr);
+                    $.ajax({
+                      url:"{:url('AjaxAction/updateuser')}",
+                      traditional :true,
+                      data:{dataarr:JSON.stringify(dataarr)},
+                      type:'post',
+                      dataType:'json',
+                      success:function(data){
+                        layer.msg('正在处理，请稍候', {icon: 16,shade: 0.01});
+                        var data = JSON.parse(data);
+                        layer.msg(data.msg,{icon:data.icon,time:1000},function(){window.location.reload();});
+                      }
+                    });
+                  }
+                });
+              </script>
+			  <!-- 公司信息开始 -->
+              <div class="layui-form-item layui-form-text">
+                <h3 style="text-align:center;width: 95%;height: 40px;line-height: 40px;border-bottom: 2px solid #d2d2d2;margin: 0 auto;">公司信息<button class="layui-btn layui-btn-sm" style="float: right;"  id="member8">编辑</button></h3>
+              </div>
+				<input type="hidden" name="members4" id="members4" value="1">
+              <div class="layui-form-item member8">
+                <label class="layui-form-label" for="staff_qq">所属部门</label>
+                <div class="layui-input-inline">
+                  {volist name="sectors" id="vv"}
+                    {if condition="$member['sectors_id'] eq $vv['id']"}{$vv['name']}{/if}
+                    {/volist}
+                </div>
+
+                <label class="layui-form-label" for="staff_school">员工岗位</label>
+                <div class="layui-input-inline">
+                  {volist name="quarters" id="vv"}
+                    {if condition="$member['quarters_id'] eq $vv['id']"}{$vv['name']}{/if}
+                    {/volist}
+                </div>
+
+                <label class="layui-form-label" for="staff_wechat">负责项目</label>
+                <div class="layui-input-inline">
+                  {volist name="project" id="vv"}
+                    {if condition="$member['project_id'] eq $vv['id']"}{$vv['name']}{/if}
+                  {/volist}
+                  {if condition="$member['project_id'] eq 999"} 全部项目 {/if}
+                </div>
+
+                <label class="layui-form-label" for="staff_email">负责城市</label>
+                <div class="layui-input-inline">
+                  {volist name="city" id="vv"}
+                    {if condition="$member['citys_id'] eq $vv['id']"}{$vv['name']}{/if}
+                  {/volist}
+                </div>
+
+
+              </div>
+              <div class="layui-form-item member8">
+                <label class="layui-form-label" for="staff_qq">公司手机</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['firm_tel']"}
+                  {$member['firm_tel']}
+                  {else}
+                  暂未填写公司手机
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_school">公司微信</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['firm_wechat']"}
+                  {$member['firm_wechat']}
+                  {else}
+                   暂未填写公司微信
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_wechat">公司qq</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['firm_qq']"}
+                  {$member['firm_qq']}
+                  {else}
+                  暂未填写公司QQ
+                  {/notempty}
+                </div>
+
+                <label class="layui-form-label" for="staff_email">公司邮箱</label>
+                <div class="layui-input-inline">
+                  {notempty name="$member['firm_email']"}
+                  {$member['firm_email']}
+                  {else}
+                  暂未填写公司邮箱
+                  {/notempty}
+                </div>
+
+
+              </div>
+              <div class="layui-form-item member8">
+                <label class="layui-form-label" for="staff_qq">员工级别</label>
+                <div class="layui-input-inline">
+                  {if condition="$member['firm_rank'] eq 1"} P1
+                  {elseif condition="$member['firm_rank'] eq 2"} P2
+                  {elseif condition="$member['firm_rank'] eq 3"} P3
+                  {elseif condition="$member['firm_rank'] eq 4"} P4
+                  {elseif condition="$member['firm_rank'] eq 5"} P5
+                  {elseif condition="$member['firm_rank'] eq 6"} P6
+                  {elseif condition="$member['firm_rank'] eq 7"} P7
+                  {elseif condition="$member['firm_rank'] eq 8"} P8
+                  {elseif condition="$member['firm_rank'] eq 9"} P9 {else} 暂未评定 {/if}
+                </div>
+
+                <label class="layui-form-label" for="staff_school">入职时间</label>
+                <div class="layui-input-inline">
+                  {:date('Y年m月d日',$member['firm_hiredate'])}
+                </div>
+
+                <!-- <label class="layui-form-label" for="staff_wechat">离职时间</label>
+                <div class="layui-input-inline">
+                  {empty name="$member['firm_leavedate']"}
+                  	未离职，努力工作ing.....
+                  {else}
+                  	{:date('Y年m月d日',$member['firm_leavedate'])}
+                  {/empty}
+                </div> -->
+
+              </div>
+              <div class="layui-form-item member8">
+                <label class="layui-form-label" for="staff_qq">负责业务</label>
+                <div class="layui-input-block">
+                {empty name="$memberbusiness"}
+                  暂无负责业务
+                {else}
+                 {if condition="in_array(99999,$memberbusiness) eq true"}
+                   	全部业务
+                   {else}
+                  {volist name="$business" id="vv"}
+
+                   	{if condition="in_array($vv['id'],$memberbusiness) eq true"}&nbsp;{$vv['name']}&nbsp;&nbsp;&nbsp;{/if}
+
+                  {/volist}
+                  {/if}
+                {/empty}
+                </div>
+
+
+              </div>
+              <div class="layui-form-item member8">
+                <label class="layui-form-label" for="staff_qq">部门职责</label>
+                <div class="layui-input-inline">
+                  {empty name="$member['firm_duty']"}
+                  	 暂无职责
+                  {else}
+                     {$member['firm_duty']}
+                  {/empty}
+                </div>
+
+
+              </div>
+
+
+
+              <div class="layui-form-item member9" style="display: none;">
+                <label class="layui-form-label" for="sectors_iis">所属部门</label>
+                <div class="layui-input-inline">
+                  <select class="layui-input" name="sectors_iis" id="sectors_iis" lay-search lay-filter="sectors_iis">
+                  	<option value="">选择部门</option>
+                  	{volist name="sectors" id="vv"}
+                    <option value="{$vv['id']}" {if condition="$member['sectors_id'] eq $vv['id']"} selected {/if} >{$vv['name']}</option>
+                    {/volist}
+                  </select>
+                </div>
+
+                <label class="layui-form-label" for="quarters_iis">员工岗位</label>
+                <div class="layui-input-inline">
+                  <select class="layui-input" name="quarters_iis"  id="quarters_iis">
+                  </select>
+                </div>
+
+                <label class="layui-form-label" for="project_iis">负责项目</label>
+                <div class="layui-input-inline">
+                  <select class="layui-input" name="project_iis" id="project_iis" lay-search lay-filter="project_iis">
+                  	<option value="999" {if condition="$member['project_id'] eq 999"} selected {/if} >全部项目</option>
+                  	{volist name="project" id="vv"}
+                    <option value="{$vv['id']}" {if condition="$member['project_id'] eq $vv['id']"} selected {/if} >{$vv['name']}</option>
+                    {/volist}
+                  </select>
+                </div>
+
+                <label class="layui-form-label" for="citys_id">负责城市</label>
+                <div class="layui-input-inline">
+                  <select class="layui-input" name="citys_id" id="citys_id" lay-search lay-filter="citys_id">
+                  	{volist name="city" id="vv"}
+                    <option value="{$vv['id']}" {if condition="$member['citys_id'] eq $vv['id']"} selected {/if} >{$vv['name']}</option>
+                    {/volist}
+                  </select>
+                </div>
+
+
+              </div>
+
+              <div class="layui-form-item member9" style="display: none;">
+                <label class="layui-form-label" for="firm_tel">公司手机</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="firm_tel" id="firm_tel" value="{$member['firm_tel']}" class="layui-input" lay-verify="firm_tel|required">
+                </div>
+
+                <label class="layui-form-label" for="firm_wechat">公司微信</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="firm_wechat" id="firm_wechat" class="layui-input" lay-verify="firm_wechat|required" value="{$member['firm_wechat']}">
+                </div>
+
+                <label class="layui-form-label" for="firm_qq">公司QQ</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="firm_qq" lay-verify="firm_qq|required" value="{$member['firm_qq']}" id="firm_qq" class="layui-input">
+                </div>
+
+                <label class="layui-form-label" for="firm_email">公司邮箱</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="firm_email" id="firm_email" class="layui-input" lay-verify="firm_email|required" value="{$member['firm_email']}">
+                </div>
+
+
+              </div>
+
+                <div class="layui-form-item member9" style="display: none;">
+	                <label class="layui-form-label" for="firm_tel">员工级别</label>
+	                <div class="layui-input-inline">
+	                  	<select class="layui-input" name="firm_rank" lay-verify="firm_rank|required" lay-search lay-filter="firm_rank" id="firm_rank">
+		                    <option value="1" {if condition="$member['firm_rank'] eq 1"} selected {/if}>P1</option>
+		                    <option value="2" {if condition="$member['firm_rank'] eq 2"} selected {/if}>P2</option>
+		                    <option value="3" {if condition="$member['firm_rank'] eq 3"} selected {/if}>P3</option>
+		                    <option value="4" {if condition="$member['firm_rank'] eq 4"} selected {/if}>P4</option>
+		                    <option value="5" {if condition="$member['firm_rank'] eq 5"} selected {/if}>P5</option>
+		                    <option value="6" {if condition="$member['firm_rank'] eq 6"} selected {/if}>P6</option>
+		                    <option value="7" {if condition="$member['firm_rank'] eq 7"} selected {/if}>P7</option>
+		                    <option value="8" {if condition="$member['firm_rank'] eq 8"} selected {/if}>P8</option>
+		                    <option value="9" {if condition="$member['firm_rank'] eq 9"} selected {/if}>P9</option>
+		                    <option value="10" {if condition="$member['firm_rank'] eq 10"} selected {/if}>P10</option>
+                  		</select>
+	                </div>
+
+	                <label class="layui-form-label" for="firm_hiredate">入职时间</label>
+	                <div class="layui-input-inline">
+	                  <input type="text" name="firm_hiredate" class="layui-input"  id="test1" value="{:date('Y-m-d',$member['firm_hiredate'])}" placeholder="请选择入职时间">
+	                </div>
+
+              </div>
+
+              <div class="layui-form-item member9" style="display: none;">
+                <label class="layui-form-label">负责业务</label>
+                <div class="layui-input-block" id="yewu">
+                    <input type='checkbox' name='firm_business' value='99999' title='全部业务'  lay-verify='firm_business|required'>
+                </div>
+              </div>
+
+              <div class="layui-form-item member9" style="display: none;">
+                <label class="layui-form-label">部门职责</label>
+                <div class="layui-input-block">
+                    <textarea name="firm_duty" id="firm_duty" class="layui-textarea" lay-verify="firm_duty|required">{$member['firm_duty']}</textarea>
+                </div>
+              </div>
+              <!-- 公司信息结束 -->
+
+				<script>
+	                $("#member8").click(function(){
+	                  var member = $("#members4").val();
+	                  if(member==1){
+	                    $(".member8").hide();
+	                    $(".member9").show();
+	                    $("#member8").html("保存");
+	                    $("#members4").attr("value","2");
+	                  }else{
+	                    $(".member8").show();
+	                    $(".member9").hide();
+	                    $("#member8").html("编辑");
+	                    $("#members4").attr("value","1");
+	                    var dataarr = {};
+	                    dataarr.sectors_id = $("#sectors_iis").val();
+	                    dataarr.quarters_id = $("#quarters_iis").val();
+	                    dataarr.project_id = $("#project_iis").val();
+	                    dataarr.firm_tel = $("#firm_tel").val();
+	                    dataarr.citys_id = $("#citys_id").val();
+	                    dataarr.firm_wechat = $("#firm_wechat").val();
+	                    dataarr.firm_qq = $("#firm_qq").val();
+	                    dataarr.firm_email = $("#firm_email").val();
+	                    dataarr.firm_rank = $("#firm_rank").val();
+	                    dataarr.firm_hiredate = $("#test1").val();
+	                    dataarr.firm_business = returnCheckboxItem("firm_business");;
+	                    dataarr.firm_duty = $("#firm_duty").val();
+
+	                    dataarr.memberid = $("#memberid").val();
+	                    dataarr.updatetype = 4;
+	                    console.log(dataarr);
+	                    $.ajax({
+	                      url:"{:url('AjaxAction/updateuser')}",
+	                      traditional :true,
+	                      data:{dataarr:JSON.stringify(dataarr)},
+	                      type:'post',
+	                      dataType:'json',
+	                      success:function(data){
+	                        layer.msg('正在处理，请稍候', {icon: 16,shade: 0.01});
+	                        var data = JSON.parse(data);
+	                        layer.msg(data.msg,{icon:data.icon,time:1000},function(){window.location.reload();});
+	                      }
+	                    });
+	                  }
+	                });
+              </script>
+
+              <!-- 员工状态开始 -->
+              <div class="layui-form-item layui-form-text">
+                <h3 style="text-align:center;width: 95%;height: 40px;line-height: 40px;border-bottom: 2px solid #d2d2d2;margin: 0 auto;">员工状态<button class="layui-btn layui-btn-sm" style="float: right;" id="member11">编辑</button></h3>
+              </div>
+			  <input type="hidden" name="members5" id="members5" value="1">
+
+              <div class="layui-form-item member11">
+                <label class="layui-form-label" for="staff_qq">员工类型</label>
+                <div class="layui-input-inline">
+                	{if condition="$member['firm_type'] eq 1"} 全职
+                	{elseif condition="$member['firm_type'] eq 2"} 兼职 {/if}
+                </div>
+              </div>
+
+              <div class="layui-form-item member11">
+                <label class="layui-form-label" for="staff_qq">在职阶段</label>
+                <div class="layui-input-inline">
+                	{if condition="$member['firm_incumbency'] eq 1"}实习期 {elseif condition="$member['firm_incumbency'] eq 2"} 试用期{elseif condition="$member['firm_incumbency'] eq 3"} 已转正{/if}
+                </div>
+              </div>
+
+              <div class="layui-form-item member11">
+                <label class="layui-form-label" for="staff_qq">员工状态</label>
+                <div class="layui-input-inline">
+                	{if condition="$member['staff_status'] eq 1"} 在职 {elseif condition="$member['staff_status'] eq 2"} 休假 {elseif condition="$member['staff_status'] eq 3"} 离职 {/if}
+                </div>
+              </div>
+			  {if condition="$member['staff_status'] eq 3"}
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="staff_qq">离职原因</label>
+                <div class="layui-input-inline">
+                  {volist name="firm_answer" id="vv"}
+                  &nbsp;{$vv}&nbsp;&nbsp;
+                  {/volist}
+                </div>
+              </div>
+              {/if}
+
+              <div class="layui-form-item member12"  style="display: none;">
+                <label class="layui-form-label" for="user_name">员工类型</label>
+                <div class="layui-input-inline">
+                  <select class="layui-input" name="firm_type" lay-verify="firm_type|required" id="firm_type">
+                    <option value="1" {if condition="$member['firm_type'] eq 1"} selected="" {/if}>全职</option>
+                    <option value="2" {if condition="$member['firm_type'] eq 2"} selected="" {/if}>兼职</option>
+                  </select>
+                </div>
+			  </div>
+			  <div class="layui-form-item member12"  style="display: none;">
+                <label class="layui-form-label" for="staff_idcard">在职阶段</label>
+                <div class="layui-input-inline">
+                  <select class="layui-input" name="firm_incumbency" lay-verify="firm_incumbency|required" id="firm_incumbency">
+                    <option value="1" {if condition="$member['firm_incumbency'] eq 1"} selected="" {/if}>实习期</option>
+                    <option value="2" {if condition="$member['firm_incumbency'] eq 2"} selected="" {/if}>试用期</option>
+                    <option value="3" {if condition="$member['firm_incumbency'] eq 3"} selected="" {/if}>已转正</option>
+                  </select>
+                </div>
+			</div>
+			  <div class="layui-form-item member12"  style="display: none;">
+                <label class="layui-form-label" for="staff_province">员工状态</label>
+                <div class="layui-input-inline">
+                  <select class="layui-input" name="staff_status" lay-verify="staff_status|required" lay-search lay-filter="staff_status" id="staff_status">
+                    <option value="1" {if condition="$member['staff_status'] eq 1"} selected="" {/if}>在职</option>
+                    <option value="2" {if condition="$member['staff_status'] eq 2"} selected="" {/if}>休假</option>
+                    <option value="3" {if condition="$member['staff_status'] eq 3"} selected="" {/if}>离职</option>
+                  </select>
+                </div>
+              </div>
+              <div  class="hahaha layui-form-item" {if condition="$member['staff_status'] neq 3"} style="display: none;"{/if}>
+                <label class="layui-form-label" for="staff_idcard">离职时间</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="firm_leavedate" class="layui-input" id="test2" value="{:date('Y-m-d',$member['firm_leavedate'])}" placeholder="请选择离职时间">
+                </div>
+              </div>
+               <div class="hahaha layui-form-item" {if condition="$member['staff_status'] neq 3"} style="display: none;"{/if}>
+                <label class="layui-form-label">离职原因</label>
+                <div class="layui-input-block">
+                  <input type="checkbox" name="firm_answer" value="薪资问题" title="薪资问题" {if condition="in_array('薪资问题',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="公司福利" title="公司福利"  {if condition="in_array('公司福利',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="公司制度" title="公司制度"  {if condition="in_array('公司制度',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="老板问题" title="老板问题"  {if condition="in_array('老板问题',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="上级问题" title="上级问题"  {if condition="in_array('上级问题',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="公司环境" title="公司环境"  {if condition="in_array('公司环境',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="家庭因素" title="家庭因素"  {if condition="in_array('家庭因素',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="加班问题" title="加班问题"  {if condition="in_array('加班问题',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="上班时长" title="上班时长"  {if condition="in_array('上班时长',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="距离问题" title="距离问题"  {if condition="in_array('距离问题',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="调岗问题" title="调岗问题"  {if condition="in_array('调岗问题',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="发展方向" title="发展方向"  {if condition="in_array('发展方向',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="同事矛盾" title="同事矛盾"  {if condition="in_array('同事矛盾',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="绩效考核" title="绩效考核"  {if condition="in_array('绩效考核',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="入学深造" title="入学深造"  {if condition="in_array('入学深造',$firm_answer) eq true"} checked="" {/if}>
+                  <input type="checkbox" name="firm_answer" value="独立创业" title="独立创业"  {if condition="in_array('独立创业',$firm_answer) eq true"} checked="" {/if}>
+                </div>
+              </div>
+            <!-- 员工状态结束 -->
+			<script>
+	                $("#member11").click(function(){
+	                  var member = $("#members5").val();
+	                  if(member==1){
+	                    $(".member11").hide();
+	                    $(".member12").show();
+	                    $("#member11").html("保存");
+	                    $("#members5").attr("value","2");
+	                  }else{
+	                    $(".member11").show();
+	                    $(".member12").hide();
+	                    $("#member11").html("编辑");
+	                    $("#members5").attr("value","1");
+	                    var dataarr = {};
+	                    dataarr.firm_type = $("#firm_type").val();
+
+	                    dataarr.firm_incumbency = $("#firm_incumbency").val();
+
+	                    dataarr.staff_status = $("#staff_status").val();
+	                    dataarr.firm_leavedate = $("#test2").val();
+	                    dataarr.firm_answer = returnCheckboxItem("firm_answer");;
+
+	                    dataarr.memberid = $("#memberid").val();
+	                    dataarr.updatetype = 5;
+	                    console.log(dataarr);
+	                    $.ajax({
+	                      url:"{:url('AjaxAction/updateuser')}",
+	                      traditional :true,
+	                      data:{dataarr:JSON.stringify(dataarr)},
+	                      type:'post',
+	                      dataType:'json',
+	                      success:function(data){
+	                        layer.msg('正在处理，请稍候', {icon: 16,shade: 0.01});
+	                        var data = JSON.parse(data);
+	                        layer.msg(data.msg,{icon:data.icon,time:1000},function(){window.location.reload();});
+	                      }
+	                    });
+	                  }
+	                });
+              </script>
+
+            <!-- 员工账号开始 -->
+<!-- 222222222222222 -->
+             <div class="layui-form-item layui-form-text">
+                <h3 style="text-align:center;width: 95%;height: 40px;line-height: 40px;border-bottom: 2px solid #d2d2d2;margin: 0 auto;">账号分配<button class="layui-btn layui-btn-sm" style="float: right;" id="member13">编辑</button></h3>
+              </div>
+              <input type="hidden" name="members6" id="members6" value="1">
+
+              <div class="layui-form-item member13" style="width:80%;margin-bottom:100px;margin-left:10%">
+
+          		<table class="layui-table" style="width:80%;margin-bottom:100px;">
+		          <tbody>
+		            {foreach $media as $l}
+		             {notempty name="$firm_distribution"}
+		             {if condition="in_array($l['id'],$firm_distribution) eq true"}
+		              <tr>
+		                <td>平台:{$l['typename']}</td>
+		                <td>链接:{$l['loginsite']}</td>
+		                <td>昵称:{$l['nick']}</td>
+		                <td>账号:{$l['name']}</td>
+		                <td>密码:{$l['pass']}</td>
+		              </tr>
+		               {/if}
+		               {/notempty}
+		            {/foreach}
+
+		          </tbody>
+        		</table>
+
+              </div>
+
+               <div class="layui-form-item member14" style="display:none;" style="width:80%;margin-bottom:100px;">
+
+          		<table class="layui-table" style="width:80%;margin-bottom:100px;margin-left:10%">
+		          <tbody>
+		            {foreach $media as $l}
+		              <tr>
+		                <td>
+		                	{notempty name="$firm_distribution"}
+		                     {if condition="in_array($l['id'],$firm_distribution) eq true"}
+		                     <input type="checkbox" name="firm_distribution" value="{$l['id']}" checked="checked" title="选中">
+		                     {else}
+		                     <input type="checkbox" name="firm_distribution" value="{$l['id']}" title="选中">
+		                     {/if}
+		                     {else}
+		                     <input type="checkbox" name="firm_distribution" value="{$l['id']}" title="选中">
+		                     {/notempty}
+
+		                </td>
+		                <td>平台:{$l['typename']}</td>
+		                <td>链接:{$l['loginsite']}</td>
+		                <td>昵称:{$l['nick']}</td>
+		                <td>账号:{$l['name']}</td>
+		                <td>密码:{$l['pass']}</td>
+		              </tr>
+		            {/foreach}
+
+		          </tbody>
+        		</table>
+
+              </div>
+
+              <!-- 员工账号结束 -->
+              <script>
+	                $("#member13").click(function(){
+	                  var member = $("#members6").val();
+	                  if(member==1){
+	                    $(".member13").hide();
+	                    $(".member14").show();
+	                    $("#member13").html("保存");
+	                    $("#members6").attr("value","2");
+	                  }else{
+	                    $(".member13").show();
+	                    $(".member14").hide();
+	                    $("#member13").html("编辑");
+	                    $("#members6").attr("value","1");
+	                    var dataarr = {};
+	                    dataarr.firm_distribution = returnCheckboxItem("firm_distribution");;
+	                    dataarr.memberid = $("#memberid").val();
+	                    dataarr.updatetype = 6;
+	                    console.log(dataarr);
+	                    $.ajax({
+	                      url:"{:url('AjaxAction/updateuser')}",
+	                      traditional :true,
+	                      data:{dataarr:JSON.stringify(dataarr)},
+	                      type:'post',
+	                      dataType:'json',
+	                      success:function(data){
+	                        layer.msg('正在处理，请稍候', {icon: 16,shade: 0.01});
+	                        var data = JSON.parse(data);
+	                        layer.msg(data.msg,{icon:data.icon,time:1000},function(){window.location.reload();});
+	                      }
+	                    });
+	                  }
+	                });
+              </script>
+
+
+
+          </div>
+          {/empty}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    layui.config({
+      base: '__TROOT__/layuiadmin/layui_exts/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        regionSelect: 'inputTags'
+    }).use(['inputTags'],function () {
+        $ = layui.jquery;
+        var inputTags = layui.inputTags;
+        var staff_skills = '';
+        inputTags.render({
+            elem:'#inputTags',//定义输入框input对象
+            aldaBtn: true,//是否开启获取所有数据的按钮
+            done: function(value){ //回车后的回调
+                staff_skills = value;
+                $('input[name=staff_skills]').val(staff_skills);
+            }
+        });
+    });
+
+
+
+    layui.use(['form','upload','element','laydate'], function(){
+      var form = layui.form,upload = layui.upload;
+      var laydate = layui.laydate;
+
+      laydate.render({
+	    elem: '#test1'
+	  });
+
+	  laydate.render({
+	    elem: '#test2'
+	  });
+
+      //身份证正面
+      upload.render({
+        elem: '#user_face1',
+        url: '{:url("AjaxAction/upload")}',
+        accept:"images",
+        acceptMime: 'image/*',
+        exts:"jpg|png|gif|bmp|jpeg",
+        auto:true,
+        size:51200,
+        drag:false,
+        before: function(obj) {
+          layer.msg('图片上传中...', {icon: 16,shade: 0.01,time: 0})
+        },
+        done: function(res) {
+            layer.close(layer.msg('上传成功！'));
+            $('input[name=user_face1]').val(res.data);
+            $('#user_faces1').attr("src",res.data);
+        }
+        ,error: function(){
+            layer.msg('上传错误！');
+        }
+      });
+      // 身份证反面
+      upload.render({
+        elem: '#user_face2',
+        url: '{:url("AjaxAction/upload")}',
+        accept:"images",
+        acceptMime: 'image/*',
+        exts:"jpg|png|gif|bmp|jpeg",
+        auto:true,
+        size:51200,
+        drag:false,
+        before: function(obj) {
+          layer.msg('图片上传中...', {icon: 16,shade: 0.01,time: 0})
+        },
+        done: function(res) {
+            layer.close(layer.msg('上传成功！'));
+            $('input[name=user_face2]').val(res.data);
+            $('#user_faces2').attr("src",res.data);
+        }
+        ,error: function(){
+            layer.msg('上传错误！');
+        }
+      });
+      // 毕业证书
+      upload.render({
+        elem: '#user_face3',
+        url: '{:url("AjaxAction/upload")}',
+        accept:"images",
+        acceptMime: 'image/*',
+        exts:"jpg|png|gif|bmp|jpeg",
+        auto:true,
+        size:51200,
+        drag:false,
+        before: function(obj) {
+          layer.msg('图片上传中...', {icon: 16,shade: 0.01,time: 0})
+        },
+        done: function(res) {
+            layer.close(layer.msg('上传成功！'));
+            $('input[name=user_face3]').val(res.data);
+            $('#user_faces3').attr("src",res.data);
+        }
+        ,error: function(){
+            layer.msg('上传错误！');
+        }
+      });
+      // 离职证明
+      upload.render({
+        elem: '#user_face4',
+        url: '{:url("AjaxAction/upload")}',
+        accept:"images",
+        acceptMime: 'image/*',
+        exts:"jpg|png|gif|bmp|jpeg",
+        auto:true,
+        size:51200,
+        drag:false,
+        before: function(obj) {
+          layer.msg('图片上传中...', {icon: 16,shade: 0.01,time: 0})
+        },
+        done: function(res) {
+            layer.close(layer.msg('上传成功！'));
+            $('input[name=user_face4]').val(res.data);
+            $('#user_faces4').attr("src",res.data);
+        }
+        ,error: function(){
+            layer.msg('上传错误！');
+        }
+      });
+      form.verify({
+             staff_tel: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！']
+            ,staff_email: [/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/, '邮箱格式不对']
+            ,staff_idcard: [/(^\d{15}$)|(^\d{17}(x|X|\d)$)/, '身份证号码不正确']
+          });
+
+      // 编辑其他员工信息
+      form.on('select(sectors_iis)', function(data) {
+        var areaId = data.value;
+        $.ajax({
+          url:"{:url('AjaxAction/quar')}",
+          data:{id:areaId},
+          type:'post',
+          success:function(data){
+            $("#quarters_iis").html(data);
+            form.render('select');
+          }
+        });
+      });
+
+      form.on('select(sectors_id)', function(data) {
+        var areaId = data.value;
+        $.ajax({
+          url:"{:url('AjaxAction/quar')}",
+          data:{id:areaId},
+          type:'post',
+          success:function(data){
+            $("#quarters_id").html(data);
+            form.render('select');
+          }
+        });
+      });
+
+      form.on('select(project_iis)', function(data) {
+        var areaId = data.value;
+        $.ajax({
+          url:"{:url('AjaxAction/teamYewu')}",
+          data:{id:areaId},
+          type:'post',
+          success:function(data){
+            $("#yewu").html(data);
+            form.render('checkbox');
+          }
+        });
+      });
+
+      form.on('select(staff_status)', function(data) {
+      	var staff_status = $("#staff_status").val();
+      	if(staff_status==3){
+      		$(".hahaha").css('display','block');
+            $(".hahaha").attr('display','block');
+      	}else{
+      		$(".hahaha").css('display','none');
+            $(".hahaha").attr('display','none');
+      	}
+
+      });
+
+      form.on('submit(add)', function(data){
+          $.ajax({
+              type:'POST',
+              url:'{:url("team/user")}',
+              data: {
+                  data:JSON.stringify(data.field)
+              },
+              success:function (data) {
+                  var status = JSON.parse(data);
+                  if (status.icon == 6){
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.parent.location.reload();
+                      });
+                  } else {
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.location.reload();
+                      });
+                  }
+              }
+          });
+        return false;
+      });
+
+      /* 演示动画 */
+    $('#component-anim .component-anim-demo .layui-anim').on('click', function(){
+      var othis = $(this), anim = othis.data('anim');
+
+      /* 停止循环 */
+      if(othis.hasClass('layui-anim-loop')){
+        return othis.removeClass(anim);
+      }
+
+      othis.removeClass(anim);
+
+      setTimeout(function(){
+        othis.addClass(anim);
+      });
+
+      /* 恢复渐隐 */
+      if(anim === 'layui-anim-fadeout'){
+        setTimeout(function(){
+          othis.removeClass(anim);
+        }, 1300);
+      }
+    });
+    });
+    function returnCheckboxItem(name){
+    var adIds = "";
+        $('input:checkbox[name="'+name+'"]:checked').each(function(i){
+            if(0==i){
+                adIds = $(this).val();
+            }else{
+                adIds += (","+$(this).val());
+            }
+        });
+        return adIds
+    }
+    // 初始化用户数据
+    function members()
+    {
+    	var memberid = $("#memberid").val();
+    	if(memberid>0)
+    	{
+    		// 赋值岗位
+    		var sectorsid = $("#sectors_iis").val();
+    		var quarters_id = $("#quarters_id").val();
+    		layui.use(['form','element'], function(){
+            var form = layui.form,
+            element = layui.element;
+	    		$.ajax({
+		          url:"{:url('AjaxAction/quar')}",
+		          data:{id:sectorsid,quarters_id:quarters_id},
+		          type:'post',
+		          success:function(data){
+		            $("#quarters_iis").html(data);
+		            form.render('select');
+		          }
+		        });
+		   var yewuid = $("#project_iis option:first").val();
+		  	layui.use(['form','element'], function(){
+		      var form = layui.form,
+		      element = layui.element;
+		        $.ajax({
+		          url:"{:url('AjaxAction/teamYewu')}",
+		          data:{id:yewuid},
+		          type:'post',
+		          success:function(data){
+		            $("#yewu").html(data);
+		            form.render('checkbox');
+		          }
+		      });
+		  	});
+    	});
+    	// 匹对所处的岗位
+
+    	}else{
+    		return false;
+    	}
+    }
+  </script>
+</body>
+</html>

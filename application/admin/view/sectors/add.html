@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">添加部门</div>
+        <div class="layui-card-body" pad15>
+          <div class="layui-form">
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="name">部门名称</label>
+              <div class="layui-input-inline">
+                <input type="text" name="name" id="name" class="layui-input">
+              </div>
+
+              <label class="layui-form-label" for="city">负责城市</label>
+              <div class="layui-input-inline">
+                <select name="city" id="city">
+                  <option value="0">全国</option>
+                  {volist name="city" id="vv"}
+                    <option value="{$vv['id']}">{$vv['name']}</option>
+                  {/volist}
+                </select>
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="projects">负责项目</label>
+              <div class="layui-input-block" id="projects">
+                  <!-- <input type="checkbox" name="projects[]" lay-filter="filter" title="全部" value="0"> -->
+                  {volist name="project" id="vv"}
+                    <input type="checkbox" name="projects" lay-filter="filter" title="{$vv['name']}" value="{$vv['id']}">
+                  {/volist}
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="business">负责业务</label>
+              <div class="layui-input-block" id="business">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">部门负责人</label>
+              <div class="layui-input-inline">
+                <input type="text" name="author" value="" class="layui-input">
+              </div>
+
+              <label class="layui-form-label">负责人电话</label>
+              <div class="layui-input-inline">
+                <input type="text" name="tel" value="" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">备注说明</label>
+              <div class="layui-input-block">
+                <textarea name="desc" class="layui-textarea" style="resize: none;"></textarea>
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">部门状态</label>
+              <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="开启" checked>
+                <input type="radio" name="status" value="0" title="关闭">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="set_website">提交</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  //获取多选框value值，拼接成逗号分隔的字符串
+  function checkedItem(name){
+    var adIds = "";
+    $('input:checkbox[name="'+name+'"]:checked').each(function(i){
+        if(0==i){
+          adIds = $(this).val();
+        }else{
+          adIds += (","+$(this).val());
+        }
+    });
+    return adIds;
+  }
+  layui.use(['form','element'], function(){
+    var form = layui.form;
+    element = layui.element;
+    var arr = [];
+    //监听checkbox
+    form.on('checkbox(filter)',function(data){
+      if (data.elem.checked === true) {
+        arr.push(data.elem.value);
+      }else{
+        arr.remove(data.elem.value);
+      }
+      var project_ids = arr.join(",");
+      $.post("{:url('AjaxAction/yewuall')}",{project_id:project_ids},function(data){
+        $('#business').html(data);
+        form.render('checkbox');
+      });
+    });
+
+    form.on('submit(set_website)', function(data){
+      data.field.projects = checkedItem('projects');
+      data.field.business = checkedItem('business');
+      $.ajax({
+        type:'POST',
+        url:'{:url("sectors/add")}',
+        data: {
+          data:JSON.stringify(data.field)
+        },
+        success:function (data) {
+          var status = JSON.parse(data);
+          if (status.icon == 6){
+            layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+              window.parent.location.reload();
+            });
+          } else {
+            layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+              window.location.reload();
+            });
+          }
+        }
+      });
+      return false;
+    });
+  });
+</script>
+</body>
+</html>

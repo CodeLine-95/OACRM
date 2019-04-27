@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+   .layui-form-select{
+     width: 100px;
+   }
+   .layui-unselect{
+     background-color: #eee;
+   }
+   .layui-form-selected dl{
+     background-color: #eee;
+   }
+ </style>
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <crmblok>
+          <div style="position: relative;">
+            <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+            <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加部门','{:url('sectors/add')}')"><i class="layui-icon">&#xe608;</i>添加部门</button>
+            <form class="layui-form" method="post" style="display:inline-block;position: absolute;right: 0;">
+              <div class="layui-input-inline">
+                <select name="type">
+                  <option value="1" {if condition="$data['type'] eq 1 || empty($data['type']) eq true"} selected {/if}>部门名称</option>
+                  <option value="2" {if condition="$data['type'] eq 2"} selected {/if}>负责项目</option>
+                  <option value="3" {if condition="$data['type'] eq 3"} selected {/if}>部门负责人</option>
+                  <option value="4" {if condition="$data['type'] eq 4"} selected {/if}>负责人电话</option>
+                  <option value="5" {if condition="$data['type'] eq 5"} selected {/if}>负责城市</option>
+                  <option value="6" {if condition="$data['type'] eq 6"} selected {/if}>部门状态</option>
+                  <option value="7" {if condition="$data['type'] eq 7"} selected {/if}>备注说明</option>
+                </select>
+              </div>
+              <div class="layui-input-inline">
+                <input type="text" name="value" class="layui-input" value="{$data['value']}" style="background-color:#eee;border:none;">
+              </div>
+              <button class="layui-btn layui-btn-normal" type="submit"><i class="layui-icon layui-icon-search"></i>搜索</button>
+            </form>
+          </div>
+        </crmblok>
+        <table class="layui-table">
+          <thead>
+            <tr>
+              <th width="25" align="center">
+                <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+              </th>
+              <th  align="center">部门名称</th>
+              <th  align="center">所属项目</th>
+              <th  align="center">负责业务</th>
+              <th  align="center">项目负责人</th>
+              <th  align="center">负责人电话</th>
+              <th  align="center">负责城市</th>
+              <th  align="center">部门职责</th>
+              <th  align="center">部门状态</th>
+              <th  align="center">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {empty name="list"}
+              <tr align="center" style="height:500px;"><td colspan="10">暂无项目</td></tr>
+          {else}
+          {volist name="list" id="vv"}
+            <tr>
+              <td>
+                  <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$vv.id}'><i class="layui-icon">&#xe605;</i></div>
+              </td>
+              <td>{$vv['name']}</td>
+              <td>{$vv['project']}</td>
+              <td>{volist name="$vv['bubu']" id="haha"}{$haha}&nbsp;{/volist}</td>
+              <td>{$vv['author']}</td>
+              <td>{$vv['tel']}</td>
+              <td>{$vv['city']}</td>
+              <td><button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('部门详情','{:url('sectors/show',array('id'=>$vv.id))}')">见详情</button></td>
+              <td>{if condition="$vv['status'] eq 1"}开启{else}关闭{/if}</td>
+              <td>
+              	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑部门','{:url('sectors/update',array('id'=>$vv.id))}')"><i class="layui-icon"></i></button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del('{$vv['id']}')"><i class="layui-icon"></i></button>
+              </td>
+            </tr>
+          {/volist}
+          {/empty}
+          </tbody>
+        </table>
+    </div>
+    </div>
+  </div>
+  <script>
+  	function del(id)
+  	{
+  		layer.confirm("您确定删除此部门吗？",function(){
+  			$.ajax({
+  				url:"{:url('sectors/del')}",
+  				data:{id:id},
+  				type:'post',
+  				success:function(data)
+  				{
+  					var status = JSON.parse(data);
+  					layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+  						window.location.reload();
+  					});
+  				}
+  			});
+  		});
+  	}
+    function delAll()
+    {
+      var datas = tableCheck.getData();
+      layer.confirm("确认删除这些规则吗？",function(){
+        $.ajax({
+          url:"{:url('integral/del')}",
+          data:{id:datas},
+          type:'get',
+          success:function(data){
+            var status = JSON.parse(data);
+            layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+              window.location.reload();
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

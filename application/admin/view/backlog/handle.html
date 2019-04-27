@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-form layui-card-body" style="height:300px;">
+            <input type="hidden" name="id" value="{$id}">
+            <div style="height:100px;"></div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="backlog_status">处理状态</label>
+                <div class="layui-input-block">
+                  <select class="layui-input" id="backlog_status" name="backlog_status">
+                    <option value="0">未处理</option>
+                    <option value="1">已处理</option>
+                    <option value="3">不执行</option>
+                  </select>
+                </div>
+              </div>
+              <div style="height:100px;"></div>
+              <div class="layui-form-item" style="text-align:center;">
+                <button class="layui-btn" lay-submit lay-filter="backlog_status">确定处理</button>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    layui.use(['form'], function(){
+      var form = layui.form;
+      form.on('submit(backlog_status)', function(data){
+          $.ajax({
+            type:'POST',
+            url:'{:url("backlog/handle")}',
+            data: {
+              data:JSON.stringify(data.field)
+            },
+            success:function (data) {
+              var status = JSON.parse(data);
+              if (status.icon == 6){
+                layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                  window.parent.location.reload();
+                });
+              } else {
+                layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                  window.location.reload();
+                });
+              }
+            }
+          });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="__TROOT__/admin/css/icon.css" media="all">
+<table class="layui-table">
+  <thead>
+    <tr>
+      <th width="25" align="center">
+        <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+      </th>
+      <th align="center" style="width:150px;">创建时间</th>
+      <th align="center" style="width:150px;">跟进时间</th>
+      <th align="center" style="width:100px;">姓名</th>
+      <th align="center" style="width:80px;">性别</th>
+      <th align="center" style="width:200px;">地域</th>
+      <th align="center" style="width:100px;">电话</th>
+      <!-- <th align="center">业务需求</th> -->
+      <th align="center" style="width:100px;">派发销售</th>
+      <th align="center" style="width:100px;">客服</th>
+      <th align="center">业务类型</th>
+      <th align="center" style="width:100px;">订单状态</th>
+      <th align="center" style="width:100px;">派单状态</th>
+      <th align="center" style="width:280px;">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {empty name="list"}
+    <tr align="center" style="height:300px;">
+      <td colspan="13">暂无订单</td>
+    </tr>
+    {else}
+    {foreach $list as $l}
+    <tr>
+      <td>
+        <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$l.id}'><i class="layui-icon">&#xe605;</i></div>
+      </td>
+      <td>{:date('m/d H:i:s',$l['create_t'])}</td>
+      <td>{if condition="$l.last_time == 0"}暂未跟进{else}{:date('m/d H:i:s',$l['last_time'])}{/if}</td>
+      <td>{$l['name']}</td>
+      <td>
+        {switch name="$l.sex"}
+        {case value="1"}男{/case}
+        {case value="2"}女{/case}
+        {case value="3"}保密{/case}
+        {/switch}
+      </td>
+      <td>{$l['city']}</td>
+      <td>{if condition="$l.phone == ''"}暂无信息{else}<span style="color:#8BC34A;">{:str_replace('+86-','',$l['phone'])}</span>{/if}</td>
+      <td>{if condition="$l.service_id == 0"}未分配{else}<label style="color:#1E9FFF;">{$l['service_name']}</label>{/if}</td>
+      <td>{$l['user']}</td>
+      <td>{$l['business']}</td>
+      <td><label class="schedule{$l.schedule}">{$l['schedule_name']}</label></td>
+      <td>
+        {switch name="$l.order_id"}
+        {case value="26"}<label class="order_name26">未派单</label>{/case}
+        {case value="27|28|29"}<label class="order_name27">已派单</label>{/case}
+        {default /}<label class="order_name{$l.order_id}">{$l.order_name}</label>
+        {/switch}
+      </td>
+      <td>
+        <button onclick="crm_admin_show('编辑','{:url('service/updateorder',['id'=>$l['id']])}')" class="layui-btn layui-btn-normal layui-btn-xs">编辑</button>
+        {switch name="$l.order_id"}
+        {case value="27|28|29|30|31|32"}
+        <button onclick="crm_admin_show('{$l.name}-转单','{:url('service/changeorder',['id'=>$l['id']])}')" class="layui-btn layui-btn-normal layui-btn-xs">转单</button>
+        <!-- <button class="layui-btn layui-btn-warm layui-btn-xs">已派</button> -->
+        {/case}
+        {case value="26"}
+        <button onclick="crm_admin_show('{$l.name}-派单','{:url('service/dispatch',array('id'=>$l.id))}')" class="layui-btn layui-btn-normal layui-btn-xs">派单</button>
+        {/case}
+        {case value="25"}
+        <button onclick="activation('{$l['id']}')" class="layui-btn layui-btn-danger layui-btn-xs">激活</button>
+        {/case}
+        {case value="23"}
+        <button onclick="crm_show('{$l.name}-处理','{:url('service/handle',array('id'=>$l.id))}',2)" class="layui-btn layui-btn-green layui-btn-xs">处理</button>
+        {/case}
+        {/switch}
+        <button class="layui-btn layui-btn-normal layui-btn-xs" onclick="del('{$l['id']}')">删除</button>
+      </td>
+    </tr>
+    {/foreach}
+    {/empty}
+  </tbody>
+</table>
+{$list->render()}
+<script type="text/javascript">
+  function activation(id) {
+    layer.confirm("您确定激活该客户吗？", function() {
+      $.ajax({
+        url: "{:url('service/activation')}",
+        data: {
+          id: id
+        },
+        type: 'post',
+        success: function(data) {
+          var status = JSON.parse(data);
+          layer.msg(status.msg, {
+            icon: status.icon,
+            time: 1000
+          }, function() {
+            window.location.reload();
+          });
+        }
+      });
+    });
+  }
+</script>

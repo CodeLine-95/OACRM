@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-body" pad15>
+            <form class="layui-form" method="post">
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="name">业务名称</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="name" name="name" lay-verify="required" class="layui-input">
+                </div>
+
+                <label class="layui-form-label" for="project_id">所属项目</label>
+                <div class="layui-input-inline">
+                  <select name="project_id" id="project_id" lay-filter="project_id">
+                    {foreach $projects as $pro}
+                    <option value="{$pro.id}">{$pro.name}</option>
+                    {/foreach}
+                  </select>
+                </div>
+
+                <label class="layui-form-label" for="firm_url">业务链接</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="firm_url" name="firm_url" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_tel">客服电话</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="firm_tel" name="firm_tel" class="layui-input">
+                </div>
+
+                <label class="layui-form-label" for="firm_wechat">客服微信</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="firm_wechat" name="firm_wechat" class="layui-input">
+                </div>
+
+                <label class="layui-form-label" for="firm_qq">客服QQ</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="firm_qq" name="firm_qq" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_answer">负责客服</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="firm_answer" name="firm_answer" class="layui-input">
+                </div>
+
+                <label class="layui-form-label" for="firm_mtel">客服手机</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="firm_mtel" name="firm_mtel" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_sale">负责销售</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="firm_sale" name="firm_sale" class="layui-input">
+                </div>
+
+                <label class="layui-form-label" for="sale_tel">销售手机</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="sale_tel" name="sale_tel" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_service">服务内容</label>
+                <div class="layui-input-block" id="firm_service">
+                  暂无
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_description">业务介绍</label>
+                <div class="layui-input-block">
+                  <textarea name="firm_description" id="firm_description" class="layui-textarea"></textarea>
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_remark">备注说明</label>
+                <div class="layui-input-block">
+                  <textarea name="firm_remark" id="firm_remark" class="layui-textarea"></textarea>
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label for="status" class="layui-form-label">业务状态</label>
+                <div class="layui-input-block">
+                  <input type="radio" name="firm_status" value="1" title="正常" checked>
+                  <input type="radio" name="firm_status" value="2" title="筹备">
+                  <input type="radio" name="firm_status" value="0" title="暂停">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn layui-btn-normal" lay-submit lay-filter="add">添加业务</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{include file="public:footer"/}
+<script type="text/javascript">
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form,layer = layui.layer;
+        //监听提交
+        form.on('submit(add)', function(data){
+          $.ajax({
+              url:"{:url('business/add')}",
+              type:"POST",
+              data: {
+                  data:JSON.stringify(data.field)
+              },
+              success:function (data) {
+                  var message = JSON.parse(data);
+                  if (message.icon == 6){
+                      layer.msg(message.msg,{icon: message.icon,time:1000},function () {
+                          window.parent.location.reload();
+                      });
+                  } else {
+                      layer.msg(message.msg,{icon: message.icon,time:1000});
+                  }
+              }
+          });
+          return false;
+      });
+    });
+</script>
+</body>
+</html>

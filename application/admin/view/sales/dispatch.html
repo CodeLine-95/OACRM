@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+<style media="screen">
+  .layui-form-select{
+    width: 100px;
+  }
+  .layui-form-selected dl{
+    background-color: #eee;
+  }
+</style>
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">派单人员</div>
+          <div class="layui-card-body" pad15>
+            <div class="layui-form">
+              <input type="hidden" name="id" value="{$id}">
+              <div class="layui-card" style="width: 100%;" id="tables">
+                <div class="layui-form-item layui-form-text">
+                  <h3 style="text-align:center;width: 100px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">选择派单人员</h3>
+                </div>
+                <table class="layui-table">
+                  <thead>
+                    <tr>
+                      <td align="center">选择</td>
+                      <td align="center">姓名</td>
+                      <td align="center">性别</td>
+                      <td align="center">部门</td>
+                      <td align="center">岗位</td>
+                      <td align="center">职责</td>
+                      <td align="center">手机号</td>
+                      <td align="center">直属领导</td>
+                      <td align="center">入职时间</td>
+                    </tr>
+                  </thead>
+                  <tbody id="table_tr">
+                    {empty name="$users"}
+                      <tr><td colspan="9">暂无派单销售</td></tr>
+                    {else}
+                    {foreach $users as $user}
+                      <tr>
+                        <td align="center"><input type="radio" name="service_id" value="{$user.id}"></td>
+                        <td align="center">{$user.user_name}</td>
+                        <td align="center">{if condition="$user.staff_sex == 1"}女{else}男{/if}</td>
+                        <td align="center">{$user.sectors}</td>
+                        <td align="center">{$user.quarters}</td>
+                        <td align="center">{$user.yewu}</td>
+                        <td align="center">{$user.staff_tel}</td>
+                        <td align="center">{$user.shangji}</td>
+                        <td align="center">{$user.create_time}</td>
+                      </tr>
+                      {/foreach}
+                    {/empty}
+                  </tbody>
+                </table>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="set_website">开始派单</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    layui.use(['form','element'], function(){
+      var form = layui.form;
+      element = layui.element;
+      form.on('submit(set_website)', function(data){
+        if(!data.field.service_id){
+          layer.msg('请选择派单人员',{icon: 5,time:1000});
+        }else {
+          data.field.id = $('input[name=id]').val();
+          $.ajax({
+            type:'POST',
+            url:'{:url("sales/dispatch")}',
+            data: {
+              data:JSON.stringify(data.field)
+            },
+            success:function (data) {
+              var status = JSON.parse(data);
+              if (status.icon == 6){
+                layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                  window.parent.location.reload();
+                });
+              }else {
+                layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                  window.location.reload();
+                });
+              }
+            }
+          });
+        }
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

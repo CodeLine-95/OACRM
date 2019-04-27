@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+<style media="screen">
+  .layui-input-inline{
+    padding: 7px 0px;
+  }
+  .layui-form-item .layui-input-inline{
+    width: 15%;
+  }
+</style>
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">客户详情</div>
+          <div class="layui-form layui-card-body" pad15>
+            <div class="layui-form-item layui-form-text">
+              <h3 style="text-align:center;width: 80px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">客户信息</h3>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="name">客户名称</label>
+              <div class="layui-input-inline">
+                {$client['name']}
+              </div>
+
+              <label class="layui-form-label" for="sex">客户性别</label>
+              <div class="layui-input-inline">
+                {if condition="$client['sex'] eq 1"}
+                男
+                {else}
+                女
+                {/if}
+              </div>
+
+              <label class="layui-form-label" for="city">籍贯省份</label>
+              <div class="layui-input-inline">
+                {$client['city']}
+              </div>
+
+              <label class="layui-form-label" for="phone">客户电话</label>
+              <div class="layui-input-inline">
+                {$client['phone']}
+              </div>
+		        </div>
+		        <div class="layui-form-item">
+              <label class="layui-form-label" for="wechat">客户微信</label>
+              <div class="layui-input-inline">
+                {$client['wechat']}
+              </div>
+
+              <label class="layui-form-label" for="qq">客户QQ</label>
+              <div class="layui-input-inline">
+                {$client['qq']}
+              </div>
+
+              <label class="layui-form-label" for="type">客户类型</label>
+              <div class="layui-input-inline">
+                {switch name="$client['type']"}
+                {case value="1"}私企{/case}
+                {case value="2"}国企{/case}
+                {case value="3"}上市{/case}
+                {case value="4"}个人{/case}
+                {case value="5"}政府{/case}
+                {/switch}
+              </div>
+
+              <label class="layui-form-label" for="email">客户邮箱</label>
+              <div class="layui-input-inline">
+                {$client['email']}
+              </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="quarters">岗位职称</label>
+                <div class="layui-input-inline">
+                  {$client['quarters']}
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <h3 style="text-align:center;width: 80px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">兴趣爱好</h3>
+            </div>
+            <div class="layui-form-item">
+              <div class="layui-input-block">
+                {foreach $interests as $i}
+                  {$i}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {/foreach}
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <h3 style="text-align:center;width: 80px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">公司信息</h3>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="sitename">公司名称</label>
+              <div class="layui-input-inline">
+                {$client['sitename']}
+              </div>
+
+              <label class="layui-form-label" for="website">公司官网</label>
+              <div class="layui-input-inline">
+                {$client['website']}
+              </div>
+
+              <label class="layui-form-label" for="siteaddress">公司地址</label>
+              <div class="layui-input-inline">
+                {$client['siteaddress']}
+              </div>
+
+              <label class="layui-form-label" for="industry">所属行业</label>
+              <div class="layui-input-inline">
+                {switch name="$client['industry']"}
+                {case value="1"}互联网{/case}
+                {case value="2"}装修{/case}
+                {case value="3"}家具{/case}
+                {/switch}
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="brand">主营业务</label>
+              <div class="layui-input-inline">
+                {$client['brand']}
+              </div>
+
+              <label class="layui-form-label" for="busi">产品品牌</label>
+              <div class="layui-input-inline">
+                {$client['busi']}
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <h3 style="text-align:center;width: 80px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">需求信息</h3>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="project_id">所属项目</label>
+              <div class="layui-input-inline">
+                {$client['project_id']}
+              </div>
+
+              <label class="layui-form-label" for="staff_idcard">业务类型</label>
+              <div class="layui-input-inline">
+                {$client['business']}
+              </div>
+
+              <label class="layui-form-label" for="staff_province">前期状态</label>
+              <div class="layui-input-inline">
+                {if condition="$client['stage'] eq 1"}
+                有
+                {else}
+                无
+                {/if}
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="service">选择服务</label>
+              <div class="layui-input-inline" style="width:80%;">
+                {foreach $service as $s}
+                {$s.name}&nbsp;&nbsp;&nbsp;&nbsp;
+                {/foreach}
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="budget">预算金额</label>
+              <div class="layui-input-inline">
+                {$client['budget']}
+              </div>
+
+              <label class="layui-form-label" for="makemoney">成交金额</label>
+              <div class="layui-input-inline">
+                {$client['makemoney']}
+              </div>
+
+              <label class="layui-form-label" for="moneystate">预算说明</label>
+              <div class="layui-input-inline">
+                {switch name="$client['moneystate']"}
+                {case value="1"}全款{/case}
+                {case value="2"}年付{/case}
+                {case value="3"}季付{/case}
+                {case value="4"}月付{/case}
+                {case value="5"}5:5{/case}
+                {case value="6"}5:2:3{/case}
+                {/switch}
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="remark">备注说明</label>
+              <div class="layui-input-block">
+                <textarea name="remark" id="remark" class="layui-textarea" readonly style="resize: none;color:#666;">{$client['remark']}</textarea>
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <h3 style="text-align:center;width: 80px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">客户来源</h3>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="source">渠道</label>
+              <div class="layui-input-inline">
+                {$client['ditch_id']}
+              </div>
+              <label class="layui-form-label" for="sourcelist">来源入口</label>
+              <div class="layui-input-inline">
+                {$client['source_id']}
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="sourcelist">咨询工具</label>
+              <div class="layui-input-inline">
+                {foreach $client['tools'] as $t}
+                  {$t['entry_name']}&nbsp;&nbsp;&nbsp;
+                {/foreach}
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <h3 style="text-align:center;width: 80px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">客户状态</h3>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="status">选择状态</label>
+              <div class="layui-input-inline">
+                {$client['schedule_name']}
+              </div>
+            </div>
+            <input type="hidden" id="xing" value="{$client['level']}">
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="staff_hobby">客户星级</label>
+              <div class="layui-input-block">
+                <div id="test4"></div>
+              </div>
+            </div>
+          </div>
+          {include file="public/timeline"}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="layui-fixbar" style="bottom:200px;">
+    <li onclick="crm_show('{$client.name}-处理','{:url('sales/handle',array('id'=>$client.id))}',2)" style="background-color:#1E9FFF;font-size: 16px;width:100px;">快速处理</li>
+  </div>
+  <script>
+    function crm_show(title,text,type){
+      layer.open({
+        type: type,
+        area: ['800px', '500px'],
+        fix: false, //不固定
+        title: title,
+        content: text
+      });
+    }
+    layui.use(['form','rate'], function(){
+      var rate = layui.rate;
+      //半星效果
+      var xing = $("#xing").val();
+      var xingval = "";
+      if(xing=="0.5"){
+        var xingval = 0.5;
+      }
+      if(xing=="1"){
+        var xingval = 1;
+      }
+      if(xing=="1.5"){
+        var xingval = 1.5;
+      }
+      if(xing=="2"){
+        var xingval = 2;
+      }
+      if(xing=="2.5"){
+        var xingval = 2.5;
+      }
+      if(xing=="3"){
+        var xingval = 3;
+      }
+      if(xing=="3.5"){
+        var xingval = 3.5;
+      }
+      if(xing=="4"){
+        var xingval = 4;
+      }
+      if(xing=="4.5"){
+        var xingval = 4.5;
+      }
+      if(xing=="5"){
+        var xingval = 5;
+      }
+      if(xingval==false){
+        var xingval = 5;
+      };
+      rate.render({
+        elem: '#test4',value: xingval,half: true,text: false,readonly:true
+      });
+    });
+  </script>
+</body>
+</html>

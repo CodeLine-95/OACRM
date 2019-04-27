@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  {include file="public:title"/}
+  <style media="screen">
+    .layui-table tbody tr:hover {
+      background-color: #fff;
+    }
+
+    .layui-form-select {
+      width: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-fluid" class="layui-form">
+    <div class="layui-card">
+      <div class="layui-row layui-col-space5">
+        {empty name="noticeall"}
+        <div class="layui-col-md12" style="border-bottom:1px solid #eeeeee;text-align:center;padding: 10px;line-height:40px;">
+          暂无待办消息
+        </div>
+        {else}
+        {foreach $noticeall as $s}
+        <div class="layui-col-md12" style="border-bottom:1px solid #eeeeee;">
+          <div class="layui-col-md1" style="text-align: right;line-height:60px;">
+            {if condition="$s.read_id != 1"}
+            <cite><span class="layui-badge-dot"></span></cite>
+            {/if}
+            <i class="layui-icon layui-icon-notice"></i>
+            {if condition="$s.typeid == 2"}
+            【派单消息】
+            {elseif condition="$s.typeid == 3"}
+            【待办消息】
+            {elseif condition="$s.typeid == 1"}
+            【系统消息】
+            {/if}
+          </div>
+          <div class="layui-col-md11">
+            <div class="layui-col-md6" style="padding: 10px;line-height:40px;text-align: left;">
+              {if condition="$s.typeid == 2"}{:str_replace('给您','给(<span style="color:#1E9FFF">'.$s.user_name.'</span>)',$s.title)}{else}{$s.title}{/if}
+            </div>
+            <div class="layui-col-md4" style="padding: 10px;line-height:40px;text-align: center;">
+              {if condition="$s.read_id == 1"}
+              <a href="javascript:void(0)" onclick="content('{$s.title}','{$s.content}','{$s.id}')" style="color:#1E9FFF;">查看</a><span>&nbsp;&nbsp;&nbsp;[&nbsp;已读&nbsp;]</span>
+              {else}
+              <a href="javascript:void(0)" onclick="content('{$s.title}','{$s.content}','{$s.id}')" style="color:#1E9FFF;">查看</a><span style="color:red;">&nbsp;&nbsp;&nbsp;[&nbsp;未读&nbsp;]</span>
+              {/if}
+            </div>
+            <div class="layui-col-md2" style="padding: 10px;line-height:40px;text-align: center;">
+              {:date('Y-m-d H:i:s',$s.create_t)}
+            </div>
+          </div>
+        </div>
+        {/foreach}
+        {/empty}
+      </div>
+    </div>
+    <script type="text/javascript">
+      function content(obj, url, id) {
+        $.post("{:url('AjaxAction/noticestatus')}", {
+          id: id
+        }, function(data) {
+          layer.open({
+            type: 0,
+            btn: false,
+            area: ['500px', '300px'],
+            shadeClose: true, //开启遮罩关闭
+            content: '</br>&nbsp;&nbsp;&nbsp;' + url,
+            cancel: function(index, layero) {
+              layer.close(index);
+              location.reload();
+            }
+          });
+        });
+      }
+    </script>
+  </div>
+</body>
+
+</html>

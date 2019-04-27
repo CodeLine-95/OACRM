@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+ </style>
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <crmblok>
+          <div style="position: relative;">
+            <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+            <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加业务类型','{:url('medium/addtype')}')"><i class="layui-icon">&#xe608;</i>添加业务类型</button>
+            <!-- <form class="layui-form" method="post" style="display:inline-block;position: absolute;right: 0;">
+              <div class="layui-input-inline">
+                <input type="text" name="value" class="layui-input" value="{$data['value']}" style="background-color:#eee;border:none;">
+              </div>
+              <button class="layui-btn layui-btn-normal" type="submit"><i class="layui-icon layui-icon-search"></i>搜索</button>
+            </form> -->
+          </div>
+        </crmblok>
+        <table class="layui-table">
+          <thead>
+            <tr>
+              <th width="25" align="center">
+                <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+              </th>
+              <th  align="center" style="width:130px;">类型名称</th>
+              <th  align="center">业务标签</th>
+              <th  align="center" style="width:60px;">合作状态</th>
+              <th  align="center" style="width:140px;">创建时间</th>
+              <th  align="center" style="width:95px;">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {empty name="list"}
+              <tr align="center" style="height:500px;"><td colspan="6">暂无项目</td></tr>
+          {else}
+          {volist name="list" id="vv"}
+            <tr>
+              <td>
+                  <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$vv.id}'><i class="layui-icon">&#xe605;</i></div>
+              </td>
+              <td>{$vv['typename']}</td>
+              <td>{$vv['name']}</td>
+              <td>{if condition="$vv['type'] eq 1"} 合作中 {else} 暂停合作 {/if}</td>
+              <td><?php echo(date('Y-m-d h:i:s',$vv['createtime']));?></td>
+              <td>
+              	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑媒介分类','{:url('medium/updatetype',array('id'=>$vv.id))}')"><i class="layui-icon"></i></button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del('{$vv['id']}')"><i class="layui-icon"></i></button>
+              </td>
+            </tr>
+          {/volist}
+          {/empty}
+          </tbody>
+        </table>
+    </div>
+    </div>
+  </div>
+  <script>
+  	function del(id)
+  	{
+  		layer.confirm("您确定删除此媒介分类吗？",function(){
+  			$.ajax({
+  				url:"{:url('medium/deltype')}",
+  				data:{id:id},
+  				type:'post',
+  				success:function(data)
+  				{
+  					var status = JSON.parse(data);
+  					layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+  						window.location.reload();
+  					});
+  				}
+  			});
+  		});
+  	}
+    function delAll()
+    {
+      var datas = tableCheck.getData();
+      layer.confirm("确认删除这些媒介分类吗？",function(){
+        $.ajax({
+          url:"{:url('medium/deltype')}",
+          data:{id:datas},
+          type:'get',
+          success:function(data){
+            var status = JSON.parse(data);
+            layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+              window.location.reload();
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

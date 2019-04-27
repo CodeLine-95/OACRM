@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {include file="public:title"/}
+  <style>
+    .layui-form-label {
+      float: left;
+      display: block;
+      padding: 9px 15px;
+      width: 80px;
+      font-weight: 400;
+      line-height: 20px;
+      text-align: right;
+  }
+  .layui-card-body {
+      position: relative;
+      padding: 10px 15px;
+      line-height: 38px;
+  }
+  </style>
+   <style>
+    /* 这段样式只是用于演示 */
+    #component-anim .layui-card-body{padding: 15px;}
+
+    #component-anim .component-anim-demo{margin-bottom: 50px; font-size: 0;}
+    #component-anim .component-anim-demo li{display: inline;font-size: 14px; text-align: center;}
+    #component-anim .component-anim-demo li .layui-icon{display: inline-block; font-size: 36px;}
+
+    #component-anim .component-anim-demo li .fontclass{display: none;}
+    #component-anim .component-anim-demo li .name{color: #c2c2c2;}
+    #component-anim .component-anim-demo li:hover{background-color: #f2f2f2; color: #000;}
+
+    #component-anim .component-anim-demo li{width: 222px;}
+    #component-anim .component-anim-demo .layui-anim{width: 150px; height: 200px; line-height: 150px; margin: 0 auto 10px; text-align: center; background-color: #d2d2d2; cursor: pointer; color:red;}
+    </style>
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-body" pad15>
+            <div class="layui-form layui-card-body layui-fluid" id="component-anim" pad15>
+              <input type="hidden" name="id" value="{$field.id}">
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="name">业务名称</label>
+                <div class="layui-input-inline">
+                  {$field.name}
+                </div>
+
+                <label class="layui-form-label" for="project_id">所属项目</label>
+                <div class="layui-input-inline">
+                  {$projects.name}
+                </div>
+
+                <label class="layui-form-label" for="firm_url">业务链接</label>
+                <div class="layui-input-inline">
+                  <a href="{$field.firm_url}">{$field.firm_url}</a>
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_tel">客服电话</label>
+                <div class="layui-input-inline">
+                  {$field.firm_tel}
+                </div>
+
+                <label class="layui-form-label" for="firm_wechat">客服微信</label>
+                <div class="layui-input-inline">
+                  {$field.firm_wechat}
+                </div>
+
+                <label class="layui-form-label" for="firm_qq">客服QQ</label>
+                <div class="layui-input-inline">
+                  {$field.firm_qq}
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_answer">负责客服</label>
+                <div class="layui-input-inline">
+                  {$field.firm_answer}
+                </div>
+
+                <label class="layui-form-label" for="firm_mtel">客服手机</label>
+                <div class="layui-input-inline">
+                  {$field.firm_mtel}
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_sale">负责销售</label>
+                <div class="layui-input-inline">
+                  {$field.firm_sale}
+                </div>
+
+                <label class="layui-form-label" for="sale_tel">销售手机</label>
+                <div class="layui-input-inline">
+                  {$field.sale_tel}
+                </div>
+              </div>
+
+              <div class="firm_service_all">
+                <div class="layui-form-item">
+                  <label class="layui-form-label" for="firm_service">服务内容</label>
+                  <div class="layui-input-inline">
+                    {foreach $servers as $s}
+                    {$s.name} &nbsp;&nbsp;&nbsp;
+                    {/foreach}
+                  </div>
+
+                </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_description">业务介绍</label>
+                <div class="layui-input-block">
+                  {$field.firm_description}
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="firm_remark">备注说明</label>
+                <div class="layui-input-block">
+                  {$field.firm_remark}
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label for="status" class="layui-form-label">业务状态</label>
+                <div class="layui-input-block">
+                  {if condition="$field.firm_status == 1"}正常{/if}
+                  {if condition="$field.firm_status == 2"}筹备{/if}
+                  {if condition="$field.firm_status == 0"}暂停{/if}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{include file="public:footer"/}
+</body>
+</html>

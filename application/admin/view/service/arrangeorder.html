@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+   .layui-form-select,.layui-input{
+     width: 100px;
+   }
+   .layui-form-item .layui-input-inline{
+     width: auto;
+   }
+ </style>
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <crmblok>
+        <div style="position: relative;">
+          <button class="layui-btn layui-btn-danger" onclick="delAll()">批量删除</button>
+          <button class="layui-btn" onclick="crm_admin_show('添加订单','{:url('service/addorder')}')">添加订单</button>
+          <!-- <button class="layui-btn" onclick="crm_admin_show('批量转单','{:url('service/addditch')}')">批量转单</button>
+          <button class="layui-btn" onclick="crm_admin_show('批量派单','{:url('service/addditch')}')">批量派单</button> -->
+          {include file="public:form"/}
+        </div>
+      </crmblok>
+      {include file="public:kefuorder"}
+    </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+  	function del(id){
+  		layer.confirm("您确定删除该订单吗？",function(){
+  			$.ajax({
+  				url:"{:url('service/delser')}",
+  				data:{id:id},
+  				type:'post',
+  				success:function(data)
+  				{
+  					var status = JSON.parse(data);
+  					layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+  						window.location.reload();
+  					});
+  				}
+  			});
+  		});
+  	}
+    function delAll(){
+      var datas = tableCheck.getData();
+      layer.confirm("确认删除选择的订单吗？",function(){
+        $.ajax({
+          url:"{:url('service/delser')}",
+          data:{id:datas},
+          type:'post',
+          success:function(data){
+            var status = JSON.parse(data);
+            layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+              window.location.reload();
+            });
+          }
+        });
+      });
+    }
+</script>
+</body>
+</html>

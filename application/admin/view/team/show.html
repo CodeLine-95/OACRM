@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+<style media="screen">
+</style>
+<style>
+  .layui-form-label {
+    float: left;
+    display: block;
+    padding: 9px 15px;
+    width: 80px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+.layui-card-body {
+    position: relative;
+    padding: 10px 15px;
+    line-height: 38px;
+}
+</style>
+<style>
+   /* 这段样式只是用于演示 */
+   #component-anim .layui-card-body{padding: 15px;}
+
+   #component-anim .component-anim-demo{margin-bottom: 50px; font-size: 0;}
+   #component-anim .component-anim-demo li{display: inline;font-size: 14px; text-align: center;}
+   #component-anim .component-anim-demo li .layui-icon{display: inline-block; font-size: 36px;}
+
+   #component-anim .component-anim-demo li .fontclass{display: none;}
+   #component-anim .component-anim-demo li .name{color: #c2c2c2;}
+   #component-anim .component-anim-demo li:hover{background-color: #f2f2f2; color: #000;}
+
+   #component-anim .component-anim-demo li{width: 222px;}
+   #component-anim .component-anim-demo .layui-anim{width: 150px; height: 200px; line-height: 150px; margin: 0 auto 10px; text-align: center; background-color: #d2d2d2; cursor: pointer; color:red;}
+ </style>
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">我的基本信息</div>
+          <div class="layui-form layui-card-body layui-fluid" id="component-anim" pad15>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="staff_num">员工工号</label>
+              <div class="layui-input-inline">
+                {$admin['staff_num']}
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <h3 style="width: 80px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">个人信息</h3>
+            </div>
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="user_name">员工姓名</label>
+                <div class="layui-input-inline">
+                  {$admin['user_name']}
+                </div>
+              </div>
+
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="staff_idcard">身份证号</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_idcard']}
+                </div>
+              </div>
+
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="staff_tel">个人手机</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_tel']}
+                </div>
+              </div>
+			      </div>
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="staff_email">个人邮箱</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_email']}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="staff_wechat">个人微信</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_wechat']}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="staff_qq">个人QQ</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_qq']}
+                </div>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="staff_province">籍贯省份</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_province']}
+                </div>
+              </div>
+
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="staff_email">大学专业</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_major']}
+                </div>
+              </div>
+
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="home_address">家乡地址</label>
+                <div class="layui-input-block">
+                  {$admin['home_address']}
+                </div>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="staff_school">毕业院校</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_school']}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="staff_wechat">文化程度</label>
+                <div class="layui-input-inline">
+                  {if condition="$admin['staff_education'] eq 1"} 博士 {/if}
+                  {if condition="$admin['staff_education'] eq 2"} 硕士 {/if}
+                  {if condition="$admin['staff_education'] eq 3"} 研究生 {/if}
+                  {if condition="$admin['staff_education'] eq 4"} 本科 {/if}
+                  {if condition="$admin['staff_education'] eq 5"} 大专 {/if}
+                  {if condition="$admin['staff_education'] eq 6"} 中专 {/if}
+                  {if condition="$admin['staff_education'] eq 7"} 高中 {/if}
+                  {if condition="$admin['staff_education'] eq 8"} 初中 {/if}
+                  {if condition="$admin['staff_education'] eq 9"} 小学 {/if}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label" for="staff_qq">现居地址</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_now_address']}
+                </div>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="user_introduce">个人介绍</label>
+              <div class="layui-input-block">
+                {$admin['user_introduce']}
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="staff_qq">员工头像</label>
+              <div class="layui-input-inline">
+                <img src="{$admin['user_face']}" alt="{$admin['user_name']}" style="width:300px;">
+              </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+              <h3 style="width: 90px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">紧急联系人</h3>
+            </div>
+
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">人员姓名</label>
+                <div class="layui-input-inline">
+                  {$admin['exigency']}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">人员关系</label>
+                <div class="layui-input-inline">
+                  {$admin['exigencyabout']}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">紧急电话</label>
+                <div class="layui-input-inline">
+                  {$admin['exigencytel']}
+                </div>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">联系地址</label>
+                <div class="layui-input-inline">
+                  {$admin['exigencyaddress']}
+                </div>
+              </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+              <h3 style="width: 90px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">职业背景</h3>
+            </div>
+
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">上家公司</label>
+                <div class="layui-input-inline">
+                  {$admin['staff_before_firm']}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">所属部门</label>
+                <div class="layui-input-inline">
+                  {$admin['sectors']}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">公司职位</label>
+                <div class="layui-input-inline">
+                  {$admin['quarters']}
+                </div>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">个人爱好</label>
+              <div class="layui-input-block">
+                {foreach $hobby as $h}
+                <span style="color:blue;">{$h}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                {/foreach}
+              </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+              <h3 style="width: 90px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">职业规划</h3>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">专业技能</label>
+              <div class="layui-input-block">
+                {foreach $staff_skills as $s}
+                <span style="color:blue;">{$s}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                {/foreach}
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">发展方向</label>
+              <div class="layui-input-block">
+                {$admin['staff_direction']}
+              </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+              <h3 style="width: 90px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">电子附件</h3>
+            </div>
+
+            <div class="layui-form-item">
+              <div style="width:25%;float:left;">
+                <!-- <label class="layui-form-label">身份证正面</label> -->
+                <div class="layui-input-inline">
+                  {if condition="$admin['frontcard'] == ''"}
+                  <div class="">
+
+                  </div>
+                  {else}
+                  <img src="{$admin['frontcard']}">
+                  {/if}
+                </div>
+              </div>
+              <div style="width:25%;float:left;">
+                <!-- <label class="layui-form-label">身份证反面</label> -->
+                <div class="layui-input-inline">
+                  {if condition="$admin['versocard'] == ''"}
+
+                  {else}
+                  <img src="{$admin['versocard']}">
+                  {/if}
+                </div>
+              </div>
+              <div style="width:25%;float:left;">
+                <!-- <label class="layui-form-label">毕业证书</label> -->
+                <div class="layui-input-inline">
+                  {if condition="$admin['dimission'] == ''"}
+                  {else}
+                  <img src="{$admin['dimission']}">
+                  {/if}
+                </div>
+              </div>
+              <div style="width:25%;float:left;">
+                <!-- <label class="layui-form-label">离职证明</label> -->
+                <div class="layui-input-inline">
+                  {if condition="$admin['dimission'] == ''"}
+
+                  {else}
+                  <img src="{$admin['dimission']}">
+                  {/if}
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="layui-form layui-card-body layui-fluid" id="component-anim" pad15>
+            <div class="layui-form-item layui-form-text">
+              <h3 style="width: 80px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">部门信息</h3>
+            </div>
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">所属部门</label>
+                <div class="layui-input-inline">
+                  {$admin['sectors']}
+                </div>
+              </div>
+
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">员工岗位</label>
+                <div class="layui-input-inline">
+                  {$admin['quarters']}
+                </div>
+              </div>
+
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">入职时间</label>
+                <div class="layui-input-inline">
+                  {:date('Y-m-d',$admin['firm_hiredate'])}
+                </div>
+              </div>
+			      </div>
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">负责城市</label>
+                <div class="layui-input-inline">
+                  {$admin['city']}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">公司邮箱</label>
+                <div class="layui-input-inline">
+                  {$admin['firm_email']}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">员工级别</label>
+                <div class="layui-input-inline">
+                  {if condition="$admin['firm_rank'] eq 1"} P1
+                    {elseif condition="$admin['firm_rank'] eq 2"} P2
+                    {elseif condition="$admin['firm_rank'] eq 3"} P3
+                    {elseif condition="$admin['firm_rank'] eq 4"} P4
+                    {elseif condition="$admin['firm_rank'] eq 5"} P5
+                    {elseif condition="$admin['firm_rank'] eq 6"} P6
+                    {elseif condition="$admin['firm_rank'] eq 7"} P7
+                    {elseif condition="$admin['firm_rank'] eq 8"} P8
+                    {elseif condition="$admin['firm_rank'] eq 9"} P9
+                    {else} 暂未评定
+                  {/if}
+                </div>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">负责项目</label>
+              <div class="layui-input-block">
+                {foreach $admin['project'] as $p}
+                {$p['name']}&nbsp;&nbsp;&nbsp;
+                {/foreach}
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">负责业务</label>
+              <div class="layui-input-block">
+                {notempty name="$admin['firm_business']"}
+                {foreach $admin['firm_business'] as $p}
+                {$p['name']}&nbsp;&nbsp;&nbsp;
+                {/foreach}
+                {/notempty}
+              </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+              <h3 style="width: 90px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">汇报对象</h3>
+            </div>
+
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">选择部门</label>
+                <div class="layui-input-inline">
+                  {$admin['sectors']}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">选择对象</label>
+                <div class="layui-input-inline">
+                  {$admin['author']}
+                </div>
+              </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+              <h3 style="width: 90px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">员工状态</h3>
+            </div>
+
+            <div class="layui-form-item">
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">员工类型</label>
+                <div class="layui-input-inline">
+                  {if condition="$admin['firm_type'] == 1"}
+                  全职
+                  {else}
+                  兼职
+                  {/if}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">在职阶段</label>
+                <div class="layui-input-inline">
+                  {if condition="$admin['firm_incumbency'] == 1"}实习期
+                  {elseif condition="$admin['firm_incumbency'] == 2"}试用期
+                  {elseif condition="$admin['firm_incumbency'] == 3"}已转正
+                  {/if}
+                </div>
+              </div>
+              <div style="width:33%;float:left;">
+                <label class="layui-form-label">员工状态</label>
+                <div class="layui-input-inline">
+                  {if condition="$admin['staff_status'] == 1"}在职
+                  {elseif condition="$admin['staff_status'] == 2"}离职
+                  {else}休假
+                  {/if}
+                </div>
+              </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+              <h3 style="width: 90px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">权限分配</h3>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">角色权限</label>
+              <div class="layui-input-block">
+                {$admin['role_name']}
+              </div>
+            </div>
+
+          </div>
+
+          <div class="layui-form-item layui-form-text">
+            <h3 style="width: 90px;height: 40px;line-height: 40px;border-bottom: 2px solid #1E9FFF;margin: 0 auto;">我的账号</h3>
+          </div>
+          <table class="layui-table">
+            <thead>
+              <tr>
+                <th  align="center">账户昵称</th>
+                <th  align="center">登陆账号</th>
+                <th  align="center">账号类型</th>
+                <th  align="center">平台名称</th>
+                <th  align="center">绑定手机</th>
+                <th  align="center">手机主人</th>
+                <th  align="center">绑定微信</th>
+                <th  align="center">添加时间</th>
+              </tr>
+            </thead>
+            <tbody>
+            {volist name="Medias" id="vv"}
+              <tr>
+                <td>{$vv['nick']}</td>
+                <td>{$vv['name']}</td>
+                <td>{$vv['typename']}</td>
+                <td>{$vv['platform']}</td>
+                <td>{$vv['tel']}</td>
+                <td>{$vv['hostname']}</td>
+                <td>{$vv['wechat']}</td>
+                <td><?php echo(date('Y-m-d h:i:s',$vv['create_t']));?></td>
+              </tr>
+            {/volist}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

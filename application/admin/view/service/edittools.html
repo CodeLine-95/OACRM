@@ -1,0 +1,115 @@
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">添加咨询工具</div>
+          <div class="layui-form layui-card-body" pad15>
+              <input type="hidden" name="id" value="{$field.id}">
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="entry">咨询入口</label>
+                <div class="layui-input-block">
+                  <input type="text" name="entry" value="{$field.entry}" id="entry" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="entry_name">入口名称</label>
+                <div class="layui-input-block">
+                  <input type="text" name="entry_name" value="{$field.entry_name}" id="entry_name" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="entry_user">入口账号</label>
+                <div class="layui-input-block">
+                  <input type="text" name="entry_user" value="{$field.entry_user}" id="entry_user" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="ditch_id">选择渠道</label>
+                <div class="layui-input-block">
+                  <select class="layui-input" name="ditch_id" id="ditch_id" lay-filter="ditch_id">
+                    {volist name="ditch" id="vv"}
+                    <option value="{$vv['id']}" {if condition="$field.ditch_id == $vv['id']"}selected{/if}>{$vv['typename']}</option>
+                    {/volist}
+                  </select>
+                </div>
+              </div>
+              <input type="hidden" name="ditchlist_id" value="{$field.ditchlist_id}">
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="ditchlist_id">选择来源</label>
+                <div class="layui-input-block" id="ditchlist_id">
+
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="entry_desc">备注说明</label>
+                <div class="layui-input-block">
+                  <textarea name="entry_desc" id="entry_desc" class="layui-textarea">{$field.entry_desc}</textarea>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="entry_status">状态</label>
+                <div class="layui-input-block" id="entry_status">
+                  <input type="radio" name="entry_status" value="1" title="启动" {if condition="$field.entry_status == 1"}checked{/if}>
+        				  <input type="radio" name="entry_status" value="2" title="暂停" {if condition="$field.entry_status == 2"}checked{/if}>
+				          <input type="radio" name="entry_status" value="3" title="筹备" {if condition="$field.entry_status == 3"}checked{/if}>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <label class="layui-form-label"><button class="layui-btn" lay-submit lay-filter="edit">编辑咨询工具</button></label>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var ditch_id = $('#ditch_id option:selected').val();
+    var ditchlist_id = $('input[name=ditchlist_id]').val();
+    layui.use(['form','element'], function(){
+      var form = layui.form,element = layui.element;
+      $.post("{:url('ajaxAction/toolsAction')}",{ditch_id:ditch_id,ditchlist_id:ditchlist_id},function(data){
+        $('#ditchlist_id').html(data);
+        form.render('select');
+      });
+    });
+    layui.use(['form','element'], function(){
+      var form = layui.form,element = layui.element;
+      form.on('select(ditch_id)',function(data){
+        $.post("{:url('ajaxAction/toolsAction')}",{ditch_id:data.value},function(data){
+          $('#ditchlist_id').html(data);
+          form.render('select');
+        });
+      });
+      form.on('submit(edit)', function(data){
+        $.ajax({
+            type:'POST',
+            url:'{:url("service/edittools")}',
+            data: {
+                data:JSON.stringify(data.field)
+            },
+            success:function (data) {
+                var status = JSON.parse(data);
+                if (status.icon == 6){
+                    layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                        window.parent.location.reload();
+                    });
+                } else {
+                    layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                        window.location.reload();
+                    });
+                }
+            }
+        });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

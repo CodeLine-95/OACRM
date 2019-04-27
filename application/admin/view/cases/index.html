@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  {include file="public:title"/}
+</head>
+
+<body>
+  <div class="layui-fluid" class="layui-form">
+    <div class="layui-card">
+      <div class="layui-tab layui-tab-brief">
+        <crmblok>
+          <div style="position: relative;">
+            <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加','{:url('cases/create')}')"><i class="layui-icon">&#xe608;</i>添加案例</button>
+          </div>
+        </crmblok>
+        <table class="layui-table">
+          <thead>
+            <tr>
+              <th align="center">创建时间</th>
+              <th align="center">案例品牌</th>
+              <th align="center">LOGO</th>
+              <th align="center">所属行业</th>
+              <th align="center">服务类型</th>
+              <th align="center">地域</th>
+              <th align="center">负责人</th>
+              <th align="center">添加人</th>
+              <th align="center">合作时间</th>
+              <th align="center">案例类型</th>
+              <th align="center">合作状态</th>
+              <th align="center">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {empty name="cases"}
+            <tr align="center" style="height:500px;">
+              <td colspan="11">暂无案例</td>
+            </tr>
+            {else}
+            {foreach $cases as $s}
+            <tr>
+              <td>{:date('Y-m-d H:i:s',$s.create_t)}</td>
+              <td>{$s.brand}</td>
+              <td>{if condition="$s.brand_logo == ''"}<img src="__TROOT__/admin/img/default.png" alt="{$s.commpany}" style="height:100px;">{else}<img src="{$s.brand_logo}" alt="{$s.commpany}" style="height:100px;">{/if}</td>
+              <td>{$s.trade}</td>
+              <td>{$s.business}</td>
+              <td>{$s.citys}</td>
+              <td>{$s.author}</td>
+              <td>{$s.user_name}</td>
+              <td>{:date('Y-m-d H:i:s',$s.cooperating_start)}</td>
+              <td>
+                {switch name="$s.type_id"}
+                {case value="0"}<span style="color:#757272;">自营案例</span>{/case}
+                {case value="1"}<span style="color:#E51C23;">行业案例</span>{/case}
+                {case value="2"}<span style="color:#FF9800;">其他案例</span>{/case}
+                {/switch}
+              </td>
+              <td>
+                {switch name="$s.cooperating"}
+                {case value="0"}<span style="color:#757272;">准备中</span>{/case}
+                {case value="1"}<span style="color:#1E9FFF;">合作中</span>{/case}
+                {case value="2"}<span style="color:#FF9800;">已结束</span>{/case}
+                {/switch}
+              </td>
+              <td>
+                <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('详情','{:url('cases/show',['id'=>$s['id']])}')">详情</button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑','{:url('cases/edit',['id'=>$s['id']])}')">编辑</button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del('{$s['id']}')">删除</button>
+              </td>
+            </tr>
+            {/foreach}
+            {/empty}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    function del(id) {
+      layer.confirm("您确定删除该案例吗？", function() {
+        $.ajax({
+          url: "{:url('cases/del')}",
+          data: {
+            id: id
+          },
+          type: 'post',
+          success: function(data) {
+            var status = JSON.parse(data);
+            layer.msg(status.msg, {
+              icon: status.icon,
+              time: 1000
+            }, function() {
+              window.location.reload();
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+
+</html>

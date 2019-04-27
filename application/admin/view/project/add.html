@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-body" pad15>
+            <form class="layui-form" method="post">
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="name">项目名称</label>
+                <div class="layui-input-block">
+                  <input type="text" id="name" name="name" lay-verify="required" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="website">项目官网</label>
+                <div class="layui-input-block">
+                  <input type="text" id="website" name="website" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="tel">客服电话</label>
+                <div class="layui-input-block">
+                  <input type="text" id="tel" name="tel" lay-verify="required" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="wechat">客服微信</label>
+                <div class="layui-input-block">
+                  <input type="text" id="wechat" name="wechat" lay-verify="required" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="qq">客服QQ</label>
+                <div class="layui-input-block">
+                  <input type="text" id="qq" name="qq" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="head">负责人</label>
+                <div class="layui-input-block">
+                  <input type="text" id="head" name="head" lay-verify="required" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="head_tel">负责人电话</label>
+                <div class="layui-input-block">
+                  <input type="text" id="head_tel" name="head_tel" lay-verify="required" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label for="status" class="layui-form-label">项目状态</label>
+                <div class="layui-input-block">
+                  <input type="radio" name="status" value="1" title="正常" checked>
+                  <input type="radio" name="status" value="2" title="筹备">
+                  <input type="radio" name="status" value="0" title="暂停">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn layui-btn-normal" lay-submit lay-filter="add">添加项目</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{include file="public:footer"/}
+<script type="text/javascript">
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form,layer = layui.layer;
+        //监听提交
+        form.on('submit(add)', function(data){
+          $.ajax({
+              url:"{:url('project/add')}",
+              type:"POST",
+              data: {
+                  data:JSON.stringify(data.field)
+              },
+              success:function (data) {
+                  var message = JSON.parse(data);
+                  if (message.icon == 6){
+                      layer.msg(message.msg,{icon: message.icon,time:1000},function () {
+                          window.parent.location.reload();
+                      });
+                  } else {
+                      layer.msg(message.msg,{icon: message.icon,time:1000});
+                  }
+              }
+          });
+          return false;
+      });
+    });
+</script>
+</body>
+</html>

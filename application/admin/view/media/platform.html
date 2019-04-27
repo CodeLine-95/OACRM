@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <crmblok>
+        <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加账号平台','{:url('media/platformadd')}')"><i class="layui-icon">&#xe608;</i>添加账号平台</button>
+      </crmblok>
+        <table class="layui-table">
+          <thead>
+            <tr>
+              <th align="center">平台名称</th>
+              <th align="center">账号类型</th>
+              <th align="center">平台首页</th>
+              <th align="center">登录地址</th>
+              <th align="center">平台介绍</th>
+              <th align="center" style="width:95px;">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {empty name="$list"}
+            <tr><td colspan="6" align="center">暂未平台</td></tr>
+          {else}
+            {volist name="list" id="vv"}
+              <tr>
+                <td>{$vv['name']}</td>
+                <td>{$vv['type_name']}</td>
+                <td>{$vv['home_url']}</td>
+                <td>{$vv['login_url']}</td>
+                <td>{$vv['description']}</td>
+                <td>
+                	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑','{:url('media/platformedit',array('id'=>$vv.id))}')"><i class="layui-icon"></i></button>
+                  <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del('{$vv['id']}')"><i class="layui-icon"></i></button>
+                </td>
+              </tr>
+            {/volist}
+          {/empty}
+          </tbody>
+        </table>
+    </div>
+    </div>
+  </div>
+  <script>
+  	function del(id){
+  		layer.confirm("您确定删除此帐号平台吗？",function(){
+  			$.ajax({
+  				url:"{:url('media/platformdel')}",
+  				data:{id:id},
+  				type:'post',
+  				success:function(data)
+  				{
+  					var status = JSON.parse(data);
+  					layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+  						window.location.reload();
+  					});
+  				}
+  			});
+  		});
+  	}
+  </script>
+</body>
+</html>

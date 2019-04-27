@@ -1,0 +1,430 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  {include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">设置我的资料</div>
+          <div class="layui-card-body" pad15>
+            <div class="layui-form" lay-filter="">
+            <div class="layui-tab">
+			  <ul class="layui-tab-title">
+			    <li class="layui-this" lay-id="11">基础信息</li>
+			    <li lay-id="22">个人资料</li>
+			    <li lay-id="33">公司分配</li>
+			    <li lay-id="44">工作信息</li>
+			    <li lay-id="55">积分信息</li>
+			  </ul>
+			  <div class="layui-tab-content">
+			    <div class="layui-tab-item layui-show">
+					    	<div class="layui-form-item">
+		                <label class="layui-form-label">用户名</label>
+		                <div class="layui-input-inline">
+		                  <input type="text" name="username" value="{$member['user_name']}" readonly class="layui-input">
+		                </div>
+		                <div class="layui-form-mid layui-word-aux">不可修改。一般用于后台登入名</div>
+		              </div>
+		              <div class="layui-form-item">
+		                <label class="layui-form-label">性别</label>
+		                <div class="layui-input-block">
+
+		                  <input type="radio" name="sex" value="0" title="男" {if condition="$member['user_sex'] eq 0"} checked {/if}>
+		                  <input type="radio" name="sex" value="1" title="女" {if condition="$member['user_sex'] eq 1"} checked {/if}>
+		                </div>
+		              </div>
+		              <div class="layui-form-item">
+		              <label for="ser_pic" class="layui-form-label">头像</label>
+		              <div class="layui-input-block">
+		                  <div style="float: left;margin-right: 10px;">
+		                      <input type="text" name="ser_pic" id="ser_pic2" value="" style="float: left;width: 800px;display: none;" required="" autocomplete="off" class="layui-input">
+		                  </div>
+		                  <button type="button" id="ser_pic" class="layui-btn" style="width: 200px;"><i class="layui-icon">&#xe67c;</i>上传头像</button>
+		                  <button type="button" style="display: none;" id="demoAction" class="layui-btn"><i class="layui-icon">&#xe67c;</i>上传demo</button>
+		                  <div style="clear: both;display:none" id="imgs">
+		                      <img src="" alt="" id="ser_pic_img" style="max-width: 500px;max-height: 200px;">
+		                  </div>
+		              </div>
+		            </div>
+                <input type="hidden" name="id" value="{$member['id']}">
+		              <div class="layui-form-item">
+		                <label class="layui-form-label">手机</label>
+		                <div class="layui-input-inline">
+		                  <input type="text" name="cellphone" value="{$member['user_tel']}"  autocomplete="off" class="layui-input">
+		                </div>
+		              </div>
+		              <div class="layui-form-item">
+		                <label class="layui-form-label">邮箱</label>
+		                <div class="layui-input-inline">
+		                  <input type="text" name="email" value="{$member['user_email']}"  autocomplete="off" class="layui-input">
+		                </div>
+		              </div>
+		              <div class="layui-form-item layui-form-text">
+		                <label class="layui-form-label">简介</label>
+		                <div class="layui-input-block">
+		                  <textarea name="remarks" placeholder="请输入内容" class="layui-textarea">{$member['user_introduce']}</textarea>
+		                </div>
+		              </div>
+		              <div class="layui-form-item">
+		                <label class="layui-form-label">登陆IP</label>
+		                <div class="layui-input-inline">
+		                  <input type="text" name="user_host" value="{$member['user_host']}"  autocomplete="off" class="layui-input" readonly>
+		                </div>
+		              </div>
+		              <div class="layui-form-item">
+		                <label class="layui-form-label">用户角色</label>
+		                <div class="layui-input-inline">
+		                  <input type="text" name="role_id" value="{$member['role_id']}"  autocomplete="off" class="layui-input" readonly>
+		                </div>
+		              </div>
+		              <div class="layui-form-item">
+		                <label class="layui-form-label">帐号状态</label>
+		                <div class="layui-input-inline">
+		                  <input type="radio" name="user_status" value="0" title="关闭" {if condition="$member['user_status'] eq 0"} checked {/if} disabled>
+		                  <input type="radio" name="user_status" value="1" title="开启" {if condition="$member['user_status'] eq 1"} checked {/if} disabled>
+		                </div>
+		              </div>
+			    </div>
+			    <div class="layui-tab-item">
+			    	<div class="layui-form-item">
+                <label class="layui-form-label">员工工号</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_num" value="{$member['staff_num']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">身份证号码</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_idcard" value="{$member['staff_idcard']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">家庭住址</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="home_address" value="{$member['home_address']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">兴趣爱好</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_hobby" value="{$member['staff_hobby']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">员工电话</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_tel" value="{$member['staff_tel']}"  autocomplete="off" class="layui-input" >
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">员工微信</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_wechat" value="{$member['staff_wechat']}"  autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">员工QQ</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_qq" value="{$member['staff_qq']}"  autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">员工邮箱</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_email" value="{$member['staff_email']}"  autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">毕业学校</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_school" value="{$member['staff_school']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">员工学历</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_education" value="{$member['staff_education']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">上家公司</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_before_firm" value="{$member['staff_before_firm']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">现居地址</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_now_address" value="{$member['staff_now_address']}"  autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">员工技能</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_skills" value="{$member['staff_skills']}"  autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">发展方向</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="staff_direction" value="{$member['staff_direction']}"  autocomplete="off" class="layui-input">
+                </div>
+              </div>
+			    </div>
+			    <div class="layui-tab-item">
+			    	<div class="layui-form-item">
+                <label class="layui-form-label">用户组编号</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="group_id" value="{$member['group_id']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">所属部门编号</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="sectors_id" value="{$member['sectors_id']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">员工岗位编号</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="quarters_id" value="{$member['quarters_id']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">负责项目</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="project_id" value="{$member['project_id']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">负责城市</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="citys_id" value="{$member['citys_id']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">公司手机号</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="firm_tel" value="{$member['firm_tel']}"  autocomplete="off" class="layui-input" readonly>
+                </div>
+              </div>
+			    </div>
+			    <div class="layui-tab-item">内容4</div>
+			    <div class="layui-tab-item">内容5</div>
+			  </div>
+			</div>
+
+
+
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="setmyinfo">确认修改</button>
+                  <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+        layui.use(['form','layer','upload'], function(){
+          $ = layui.jquery;
+          var form = layui.form,layer = layui.layer;
+          var upload = layui.upload;
+          //上传图片实例
+          upload.render({
+              elem: '#ser_pic',
+              url: '{:url("index/upload")}',
+              accept:"images",
+              exts:"jpg|png|gif|bmp|jpeg",
+              auto:false,
+              choose: function(obj){
+                  obj.preview(function(index, file, result){
+                      //图片链接（base64）
+                      base64url = $('#ser_pic_img').attr('src');
+                      ImgToBase64(convertBase64ToBlob(result), 720, function (base64) {
+
+                      //可以在这里用ajax 请求后台上传图片  ，或者获取img标签src 上传
+                      $.ajax({
+                        url:'{:url("index/upload")}',
+                        type:"POST",
+                        data:{
+                          img:base64
+                        },
+                        success:function(data){
+                          if(data.icon == 'success'){
+                            $('#ser_pic_img').attr('src', result);
+			                    $('#imgs').css('display','block');
+			                    $('input[name="ser_pic"]').attr('value',data.url);
+			                    layer.msg(data.msg,{icon: 6,time:1000});
+                          }else{
+                            layer.msg(data.msg,{icon: 5,time:1000});
+                          }
+                        }
+                      });
+                  });
+                  });
+              }
+            });
+                //自定义验证规则
+                form.verify({
+                    role_id:function () {
+
+                    }
+                });
+              //监听提交
+              form.on('submit(setmyinfo)', function(data){
+                //发异步，把数据提交给php
+                $.ajax({
+                    url:"{:url('index/member')}",
+                    type:"POST",
+                    data: {
+                        data:JSON.stringify(data.field)
+                    },
+                    success:function (data) {
+                        var status = JSON.parse(data);
+                        if (status.icon == 6){
+                            layer.msg(status.msg,{icon: status.icon,time:1000},function () {
+                                window.parent.location.reload();
+                           });
+                        } else {
+                            layer.msg(status.msg,{icon: status.icon,time:1000});
+                        }
+                    }
+                });
+            return false;
+            });
+            //多图片上传
+            var upurl = "{:url('system/upload')}"; //上传图片地址
+            var layer = layui.layer;
+            var upload = layui.upload;
+            upload.render({ //上传图片
+                elem: '#upload_img_icon',
+                url: upurl,
+                multiple: true, //是否允许多文件上传。设置 true即可开启。不支持ie8/9
+                auto:true,//自动上传
+                before: function(obj) {
+                    layer.msg('图片上传中...', {
+                        icon: 16,
+                        shade: 0.01,
+                        time: 0
+                    })
+                },
+                done: function(res) {
+                    layer.close(layer.msg('上传成功！'));
+                    $('.upload-img-box').append('<dd class="upload-icon-img" ><div class="upload-pre-item"><i onclick="deleteImg($(this))"   class="layui-icon"></i><img src="' + res.data + '" class="img" ><input type="hidden" name="case_images[]" value="' + res.data + '" /></div></dd>');
+                }
+                ,error: function(){
+                    layer.msg('上传错误！');
+                }
+            });
+            function convertBase64ToBlob(base64){
+            var base64Arr = base64.split(',');
+            var imgtype = '';
+            var base64String = '';
+            if(base64Arr.length > 1){
+                //如果是图片base64，去掉头信息
+                base64String = base64Arr[1];
+                imgtype = base64Arr[0].substring(base64Arr[0].indexOf(':')+1,base64Arr[0].indexOf(';'));
+            }
+            // 将base64解码
+            var bytes = atob(base64String);
+            //var bytes = base64;
+            var bytesCode = new ArrayBuffer(bytes.length);
+            // 转换为类型化数组
+            var byteArray = new Uint8Array(bytesCode);
+
+            // 将base64转换为ascii码
+            for (var i = 0; i < bytes.length; i++) {
+                byteArray[i] = bytes.charCodeAt(i);
+            }
+
+            // 生成Blob对象（文件对象）
+            return new Blob( [bytesCode] , {type : imgtype});
+        };
+        function ImgToBase64(file, maxLen, callBack) {
+            var img = new Image();
+
+            var reader = new FileReader();//读取客户端上的文件
+            reader.onload = function () {
+                var url = reader.result;//读取到的文件内容.这个属性只在读取操作完成之后才有效,并且数据的格式取决于读取操作是由哪个方法发起的.所以必须使用reader.onload，
+                img.src = url;//reader读取的文件内容是base64,利用这个url就能实现上传前预览图片
+            };
+
+            img.onload = function () {
+                //生成比例
+                var width = img.width, height = img.height;
+                //计算缩放比例
+                var rate = 1;
+                if (width >= height) {
+                    if (width > maxLen) {
+                        rate = maxLen / width;
+                    }
+                } else {
+                    if (height > maxLen) {
+                        rate = maxLen / height;
+                    }
+                };
+
+
+                img.width = width * rate;
+                img.height = height * rate;
+                //生成canvas
+                var canvas = document.createElement("canvas");
+                var ctx = canvas.getContext("2d");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+                var base64 = canvas.toDataURL('image/jpeg', getCompressRate(1,showSize(base64url)));
+                callBack(base64);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function getCompressRate(allowMaxSize,fileSize){ //计算压缩比率，size单位为MB
+            var compressRate = 1;
+            if(fileSize/allowMaxSize > 4){
+                compressRate = 0.5;
+            } else if(fileSize/allowMaxSize >3){
+                compressRate = 0.6;
+            } else if(fileSize/allowMaxSize >2){
+                compressRate = 0.7;
+            } else if(fileSize > allowMaxSize){
+                compressRate = 0.8;
+            } else{
+                compressRate = 0.9;
+            }
+            result6 = compressRate;
+            return compressRate;
+        }
+
+        function showSize(base64url) {
+            //获取base64图片大小，返回MB数字
+            var str = base64url.replace('data:image/png;base64,', '');
+            var equalIndex = str.indexOf('=');
+            if(str.indexOf('=')>0) {
+                str=str.substring(0, equalIndex);
+            }
+            var strLength=str.length;
+            var fileLength=parseInt(strLength-(strLength/8)*2);
+            // 由字节转换为MB
+            var size = "";
+            size = (fileLength/(1024 * 1024)).toFixed(2);
+            var sizeStr = size + "";                        //转成字符串
+            var index = sizeStr.indexOf(".");                    //获取小数点处的索引
+            var dou = sizeStr.substr(index + 1 ,2)            //获取小数点后两位的值
+            if(dou == "00"){                                //判断后两位是否为00，如果是则删除00
+                return sizeStr.substring(0, index) + sizeStr.substr(index + 3, 2)
+            }
+            return parseInt(size);
+        }
+    });
+</script>
+</body>
+</html> -->

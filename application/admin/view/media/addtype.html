@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">添加账号类型</div>
+          <div class="layui-card-body" pad15>
+
+            <div class="layui-form" wid100 lay-filter="">
+              <div class="layui-form-item">
+                <label class="layui-form-label">类型名称</label>
+                <div class="layui-input-block">
+                  <input type="text" name="typename" value="" class="layui-input" placeholder="在此添加类型名称">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">类型说明</label>
+                <div class="layui-input-block">
+                  <textarea name="description" class="layui-textarea"></textarea>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="set_website">提交</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    layui.use(['form','element'], function(){
+      var form = layui.form;
+      element = layui.element;
+      form.on('submit(set_website)', function(data){
+          $.ajax({
+              type:'POST',
+              url:'{:url("media/addtype")}',
+              data: {
+                  data:JSON.stringify(data.field)
+              },
+              success:function (data) {
+                  var status = JSON.parse(data);
+                  if (status.icon == 6){
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.parent.location.reload();
+                      });
+                  } else {
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.location.reload();
+                      });
+                  }
+              }
+          });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

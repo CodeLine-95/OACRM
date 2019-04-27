@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-body" pad15>
+            <form class="layui-form" method="post">
+              <input type="hidden" name="id" value="{$field.id}">
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="name">服务名称</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="name" name="name" value="{$field.name}" lay-verify="required" class="layui-input">
+                </div>
+
+                <label class="layui-form-label" for="business_id">所属业务</label>
+                <div class="layui-input-inline">
+                  <select name="business_id" id="business_id">
+                    {foreach $business as $b}
+                    <option value="{$b.id}" {if condition="$field.business_id == $b.id"}selected{/if}>{$b.name}</option>
+                    {/foreach}
+                  </select>
+                </div>
+
+                <label class="layui-form-label" for="reference_link">参考链接</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="reference_link" name="reference_link" value="{$field.reference_link}" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="description">服务详情</label>
+                <div class="layui-input-block">
+                  <textarea name="description" id="description" class="layui-textarea">{$field.description}</textarea>
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label for="status" class="layui-form-label">状态</label>
+                <div class="layui-input-block" id="status">
+                  <input type="radio" name="status" value="1" title="正常" {if condition="$field.status == 1"}checked{/if}>
+                  <input type="radio" name="status" value="2" title="暂停" {if condition="$field.status == 2"}checked{/if}>
+                  <input type="radio" name="status" value="3" title="筹备" {if condition="$field.status == 3"}checked{/if}>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn layui-btn-normal" lay-submit lay-filter="edit">修改服务内容</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{include file="public:footer"/}
+<script type="text/javascript">
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form,layer = layui.layer;
+        //监听提交
+        form.on('submit(edit)', function(data){
+          $.ajax({
+              url:"{:url('business/seredit')}",
+              type:"POST",
+              data: {
+                  data:JSON.stringify(data.field)
+              },
+              success:function (data) {
+                  var message = JSON.parse(data);
+                  if (message.icon == 6){
+                      layer.msg(message.msg,{icon: message.icon,time:1000},function () {
+                          window.parent.location.reload();
+                      });
+                  } else {
+                      layer.msg(message.msg,{icon: message.icon,time:1000});
+                  }
+              }
+          });
+          return false;
+      });
+    });
+</script>
+</body>
+</html>

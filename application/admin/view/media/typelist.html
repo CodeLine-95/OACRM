@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <crmblok>
+        <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加账号类型','{:url('media/addtype')}')"><i class="layui-icon">&#xe608;</i>添加账号类型</button>
+      </crmblok>
+        <table class="layui-table">
+          <thead>
+            <tr>
+              <th  align="center">类型名称</th>
+              <th  align="center">类型说明</th>
+              <th  align="center">添加时间</th>
+              <th  align="center">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {volist name="list" id="vv"}
+            <tr>
+              <td>{$vv['typename']}</td>
+              <td>{$vv['description']}</td>
+              <td><?php echo(date('Y-m-d h:i:s',$vv['createtime']));?></td>
+              <td>
+              	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑部门','{:url('media/updatetype',array('id'=>$vv.id))}')"><i class="layui-icon"></i></button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del('{$vv['id']}')"><i class="layui-icon"></i></button>
+              </td>
+            </tr>
+          {/volist}
+          </tbody>
+        </table>
+    </div>
+    </div>
+  </div>
+  <script>
+  	function del(id)
+  	{
+  		layer.confirm("您确定删除此帐号类型吗？",function(){
+  			$.ajax({
+  				url:"{:url('media/deltype')}",
+  				data:{id:id},
+  				type:'post',
+  				success:function(data)
+  				{
+  					var status = JSON.parse(data);
+  					layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+  						window.location.reload();
+  					});
+  				}
+  			});
+  		});
+  	}
+  </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+   .layui-form-select{
+     width: 100px;
+   }
+   .layui-unselect{
+     background-color: #eee;
+   }
+   .layui-form-selected dl{
+     background-color: #eee;
+   }
+ </style>
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <crmblok>
+          <div style="position: relative;">
+            <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+            <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加积分规则','{:url('integral/add')}')"><i class="layui-icon">&#xe608;</i>添加积分规则</button>
+            <form class="layui-form" method="post" style="display:inline-block;position: absolute;right: 0;">
+              <div class="layui-input-inline">
+                <select name="type">
+                  <option value="1" {if condition="$data['type'] neq 2 || $data['type'] neq 3"} selected {/if}>积分种类</option>
+                  <option value="2" {if condition="$data['type'] eq 2"} selected {/if}>积分分值</option>
+                  <option value="3" {if condition="$data['type'] eq 3"} selected {/if}>考核项目</option>
+                </select>
+              </div>
+              <div class="layui-input-inline">
+                <input type="text" name="value" class="layui-input" value="{$data['value']}" style="background-color:#eee;border:none;">
+              </div>
+              <button class="layui-btn layui-btn-normal" type="submit"><i class="layui-icon layui-icon-search"></i>搜索</button>
+            </form>
+          </div>
+        </crmblok>
+        <table class="layui-table" >
+          <thead>
+            <tr>
+              <th width="25" align="center">
+                <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+              </th>
+              <th  align="center">考核项目</th>
+              <th  align="center">积分分值</th>
+              <th  align="center">积分类别</th>
+              <th  align="center">添加时间</th>
+              <th  align="center">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {empty name="list"}
+              <tr align="center" style="height:500px;"><td colspan="6">暂无项目</td></tr>
+          {else}
+          {volist name="list" id="vv"}
+            <tr>
+              <td>
+                  <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$vv.id}'><i class="layui-icon">&#xe605;</i></div>
+              </td>
+              <td>{$vv['desc']}</td>
+              <td>{$vv['score']}</td>
+              <td>{$vv['type']}</td>
+
+              <td><?php echo(date('Y-m-d h:i:s',$vv['create_t']));?></td>
+              <td>
+              	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑积分规则','{:url('integral/update',['id'=>$vv['id']])}')">编辑</button>
+              	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del('{$vv['id']}')">删除</button>
+              </td>
+            </tr>
+          {/volist}
+          {/empty}
+          </tbody>
+        </table>
+    </div>
+    </div>
+  </div>
+  <script>
+  	function del(id)
+  	{
+  		layer.confirm("您确定删除此规则吗？",function(){
+  			$.ajax({
+  				url:"{:url('integral/del')}",
+  				data:{id:id},
+  				type:'post',
+  				success:function(data)
+  				{
+  					var status = JSON.parse(data);
+  					layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+  						window.location.reload();
+  					});
+  				}
+  			});
+  		});
+  	}
+    function delAll()
+    {
+      var datas = tableCheck.getData();
+      layer.confirm("确认删除这些规则吗？",function(){
+        $.ajax({
+          url:"{:url('integral/del')}",
+          data:{id:datas},
+          type:'get',
+          success:function(data){
+            var status = JSON.parse(data);
+            layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+              window.location.reload();
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

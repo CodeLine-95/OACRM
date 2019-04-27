@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">添加岗位</div>
+          <div class="layui-card-body" pad15>
+
+            <div class="layui-form" wid100 lay-filter="">
+              <div class="layui-form-item">
+                <label class="layui-form-label">岗位名称</label>
+                <div class="layui-input-inline">
+                <input type="text" name="name" value="" class="layui-input" placeholder="在此添加岗位名称">
+                </div>
+
+                <label class="layui-form-label">所属部门</label>
+                <div class="layui-input-inline">
+                  <select id="sectors_id" name="sectors_id" lay-verify="sectors_id" lay-search lay-filter="sectors_id">
+                    {volist name="list" id="vv"}
+                      <option value="{$vv['id']}">{$vv['name']}</option>
+                    {/volist}
+                    </select>
+                </div>
+              </div>
+              <div class="layui-input-item">
+                <label class="layui-form-label">负责项目</label>
+                <div class="layui-input-block" id="project_id">
+                </div>
+              </div>
+              <div class="layui-form" wid100 lay-filter="">
+                <div class="layui-form-item layui-form-text">
+              <label class="layui-form-label">岗位类型</label>
+                <div class="layui-input-inline">
+                  <select id="type" name="type" lay-verify="type" lay-search lay-filter="type">
+                      <option value="1">全职</option>
+                      <option value="0">兼职</option>
+                      <option value="2">实习生</option>
+                    </select>
+                </div>
+              </div>
+              <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">岗位职责</label>
+                <div class="layui-input-block">
+                  <textarea name="desc" class="layui-textarea" style="resize: none;" placeholder="在此添加岗位职责"></textarea>
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="set_website">提交</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    layui.use(['form','element'], function(){
+      var form = layui.form;
+      element = layui.element;
+      form.on('select(sectors_id)', function(data) {
+        var areaId = data.value;
+        $.ajax({
+          url:"{:url('AjaxAction/pro')}",
+          data:{id:areaId},
+          type:'post',
+          success:function(data){
+            $("#project_id").html(data);
+            form.render('checkbox');
+          }
+        });
+      });
+      form.on('submit(set_website)', function(data){
+          $.ajax({
+              type:'POST',
+              url:'{:url("quarters/add")}',
+              data: {
+                  data:JSON.stringify(data.field)
+              },
+              success:function (data) {
+                  var status = JSON.parse(data);
+                  if (status.icon == 6){
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.parent.location.reload();
+                      });
+                  } else {
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.location.reload();
+                      });
+                  }
+              }
+          });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

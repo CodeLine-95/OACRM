@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+ </style>
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <crmblok>
+        <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加账号','{:url('media/add')}')"><i class="layui-icon">&#xe608;</i>添加账号</button>
+      </crmblok>
+        <table class="layui-table">
+          <thead>
+            <tr>
+              <th  align="center">账户昵称</th>
+              <th  align="center">登陆账号</th>
+              <th  align="center">账号类型</th>
+              <th  align="center">平台名称</th>
+              <th  align="center">绑定手机</th>
+              <th  align="center">手机主人</th>
+              <th  align="center">绑定微信</th>
+              <th  align="center">添加时间</th>
+              <th  align="center">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {volist name="list" id="vv"}
+            <tr>
+              <td>{$vv['nick']}</td>
+              <td>{$vv['name']}</td>
+              <td>{$vv['typename']}</td>
+              <td>{$vv['platform']}</td>
+              <td>{$vv['tel']}</td>
+              <td>{$vv['hostname']}</td>
+              <td>{$vv['wechat']}</td>
+              <td><?php echo(date('Y-m-d h:i:s',$vv['create_t']));?></td>
+              <td>
+              	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑账号','{:url('media/update',['id'=>$vv['id']])}')">编辑</button>
+              	<button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del('{$vv['id']}')">删除</button>
+              </td>
+            </tr>
+          {/volist}
+          </tbody>
+        </table>
+        {$list->render()}
+    </div>
+    </div>
+  </div>
+  <script>
+  	function del(id)
+  	{
+  		layer.confirm("您确定删除此帐号吗？",function(){
+  			$.ajax({
+  				url:"{:url('media/del')}",
+  				data:{id:id},
+  				type:'post',
+  				success:function(data)
+  				{
+  					var status = JSON.parse(data);
+  					layer.msg(status.msg,{icon:status.icon,time:1000},function(){
+  						window.location.reload();
+  					});
+  				}
+  			});
+  		});
+  	}
+  </script>
+</body>
+</html>

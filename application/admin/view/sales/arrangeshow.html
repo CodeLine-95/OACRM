@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+   .layui-form-select{
+    width: 100px;
+   }
+ </style>
+</head>
+<body>
+<div class="layui-fluid">
+  <div class="layui-card" style="padding:20px;">
+    <div class="layui-tab layui-tab-brief">
+      <div class="layui-form-item" style="text-align:center;">
+        <label style="font-weight: bold;">销售：{$user.user_name}</label>
+      </div>
+      <div class="layui-form-item" style="text-align:center;">
+        <label style="font-weight: bold;">起始时间：{$user.starttime}</label>
+      </div>
+      <label style="font-weight: bold;">近期数据概况</label>
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th align="center">日期</th>
+            <th align="center">未跟进客户</th>
+            <th align="center">已跟进客户</th>
+            <th align="center">已退单客户</th>
+            <th align="center">已报价客户</th>
+            <th align="center">已发方案客户</th>
+            <th align="center">已发合同客户</th>
+            <th align="center">已合作客户</th>
+            <th align="center">已付款客户</th>
+          </tr>
+        </thead>
+        <tbody>
+          {foreach $user['count'] as $c}
+          <tr>
+            <td>{$c['date']}</td>
+            <td>{$c['failure_followup']}</td>
+            <td>{$c['followup']}</td>
+            <td>{$c['retreat']}</td>
+            <td>{$c['quote']}</td>
+            <td>{$c['plan']}</td>
+            <td>{$c['pact']}</td>
+            <td>{$c['cooperate']}</td>
+            <td>{$c['payment']}</td>
+          </tr>
+          {/foreach}
+        </tbody>
+      </table>
+      <br/><br/><br/>
+      <label style="font-weight: bold;">近期数据详情</label>
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th align="center">日期</th>
+            <th align="center">未跟进客户</th>
+            <th align="center">已跟进客户</th>
+            <th align="center">已退单客户</th>
+            <th align="center">已报价客户</th>
+            <th align="center">已发方案客户</th>
+            <th align="center">已发合同客户</th>
+            <th align="center">已合作客户</th>
+            <th align="center">已付款客户</th>
+          </tr>
+        </thead>
+        <tbody>
+          {foreach $user['count'] as $c}
+          <tr>
+            <td>{$c['date']}</td>
+            <td>{$c['failure_followup']}</td>
+            <td>{$c['followup']}</td>
+            <td>{$c['retreat']}</td>
+            <td>{$c['quote']}</td>
+            <td>{$c['plan']}</td>
+            <td>{$c['pact']}</td>
+            <td>{$c['cooperate']}</td>
+            <td>{$c['payment']}</td>
+          </tr>
+          {/foreach}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

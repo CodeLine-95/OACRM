@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  {include file="public:title"/}
+  <script src="__TROOT__/layuiadmin/layui_exts/city-picker/city-picker.data.js"></script>
+  <link href="__TROOT__/layuiadmin/layui_exts/city-picker/city-picker.css" rel="stylesheet" />
+  <style>
+    .layui-form-label {
+      float: left;
+      display: block;
+      padding: 9px 15px;
+      width: 80px;
+      font-weight: 400;
+      line-height: 20px;
+      text-align: right;
+    }
+
+    .layui-card-body {
+      position: relative;
+      padding: 10px 15px;
+      line-height: 38px;
+    }
+  </style>
+  <style>
+    /* 这段样式只是用于演示 */
+    #component-anim .layui-card-body {
+      padding: 15px;
+    }
+
+    #component-anim .component-anim-demo {
+      margin-bottom: 50px;
+      font-size: 0;
+    }
+
+    #component-anim .component-anim-demo li {
+      display: inline;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    #component-anim .component-anim-demo li .layui-icon {
+      display: inline-block;
+      font-size: 36px;
+    }
+
+    #component-anim .component-anim-demo li .fontclass {
+      display: none;
+    }
+
+    #component-anim .component-anim-demo li .name {
+      color: #c2c2c2;
+    }
+
+    #component-anim .component-anim-demo li:hover {
+      background-color: #f2f2f2;
+      color: #000;
+    }
+
+    #component-anim .component-anim-demo li {
+      width: 222px;
+    }
+
+    #component-anim .component-anim-demo .layui-anim {
+      width: 150px;
+      height: 200px;
+      line-height: 150px;
+      margin: 0 auto 10px;
+      text-align: center;
+      background-color: #d2d2d2;
+      cursor: pointer;
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">案例详情</div>
+          <div class="layui-form layui-card-body">
+            <div class="layui-form-item">
+              <input type="hidden" name="id" value="{$field.id}">
+              <label class="layui-form-label" for="brand">品牌名称</label>
+              <div class="layui-input-block">
+                {$field.brand}
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="commpany">公司名称</label>
+              <div class="layui-input-block">
+                {$field.commpany}
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="website">公司官网</label>
+              <div class="layui-input-block">
+                {$field.website}
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" for="trade">所属行业</label>
+              <div class="layui-input-block">
+                {$field.trade}
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="citys">所属城市</label>
+                <div class="layui-input-block">
+                  {$field['citys']}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="entrance">参考入口</label>
+                <div class="layui-input-block">
+                  {$field.entrance}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="description">公司简介</label>
+                <div class="layui-input-block">
+                  {$field.description}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="brand_logo">品牌LOGO</label>
+                <div class="layui-input-block">
+                  <div class="layui-col-md12">
+                    <img src="{$field.brand_logo}" alt="{$field.commpany}" style="max-width:100px;">
+                  </div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="service_id">服务类型</label>
+                <div class="layui-input-block">
+                  {$field.business}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="content">服务内容</label>
+                <div class="layui-input-block">
+                  {$field.content}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="symptom">售前症状</label>
+                <div class="layui-input-block">
+                  {$field.symptom}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="title">案例标题</label>
+                <div class="layui-input-block">
+                  {$field.title}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="effect">服务效果</label>
+                <div class="layui-input-block">
+                  {$field.effect}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="cooperating_start">合作时间</label>
+                <div class="layui-input-block">
+                  {:date('Y-m-d H:i:s',$field.cooperating_start)}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="cooperating_end">结束时间</label>
+                <div class="layui-input-block">
+                  {:date('Y-m-d H:i:s',$field.cooperating_end)}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="cooperating">合作状态</label>
+                <div class="layui-input-block">
+                  {if condition="$field.cooperating == 0" }准备期{/if}
+                  {if condition="$field.cooperating == 1" }合作中{/if}
+                  {if condition="$field.cooperating == 2" }已完成{/if}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="type_id">案例类型</label>
+                <div class="layui-input-block">
+                  {if condition="$field.cooperating == 0" }自营案例{/if}
+                  {if condition="$field.cooperating == 1" }行业案例{/if}
+                  {if condition="$field.cooperating == 2" }其他案例{/if}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="remarks">备注说明</label>
+                <div class="layui-input-block">
+                  {$field.remarks}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="source">案例来源</label>
+                <div class="layui-input-block">
+                  {$field.source}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="show">案例详情</label>
+                <div class="layui-input-block">
+                  {$field.show}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="author">执行人员</label>
+                <div class="layui-input-block">
+                  {$field.author}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="author">添加人员</label>
+                <div class="layui-input-block">
+                  {$field.user_name}
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="author">创建时间</label>
+                <div class="layui-input-block">
+                  {:date('Y-m-d H:i:s',$field.create_t)}
+                </div>
+              </div>
+              <!-- <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="edit">修改案例</button>
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <script type="text/javascript">
+      layui.config({
+        base: '__TROOT__/layuiadmin/layui_exts/' //静态资源所在路径
+      }).extend({
+        citypicker: 'city-picker/city-picker' // {/}的意思即代表采用自有路径，即不跟随 base 路径
+      }).use(['citypicker'], function() {
+        var $ = layui.$,
+          cityPicker = layui.citypicker;
+        var currentPicker = new cityPicker("#city-picker", {
+          provincename: "provinceId",
+          cityname: "cityId",
+          districtname: "districtId",
+          level: 'districtId', // 级别
+        });
+      });
+      layui.use(['form', 'upload', 'layedit', 'laydate'], function() {
+        var form = layui.form,
+          upload = layui.upload,
+          layedit = layui.layedit,
+          laydate = layui.laydate;
+        laydate.render({
+          elem: '#cooperating_start',
+          type: 'datetime'
+        });
+        laydate.render({
+          elem: '#cooperating_end',
+          type: 'datetime'
+        });
+        upload.render({
+          elem: '#brand_logo',
+          url: '{:url("AjaxAction/upload")}',
+          accept: "images",
+          acceptMime: 'image/*',
+          exts: "jpg|png|gif|bmp|jpeg",
+          auto: true,
+          size: 51200,
+          drag: false,
+          before: function(obj) {
+            layer.msg('图片上传中...', {
+              icon: 16,
+              shade: 0.01,
+              time: 0
+            })
+          },
+          done: function(res) {
+            layer.close(layer.msg('上传成功！'));
+            $('input[name=brand_logo]').val(res.data);
+          },
+          error: function() {
+            layer.msg('上传错误！');
+          }
+        });
+        //创建一个编辑器
+        var editIndex = layedit.build('show', {
+          tool: [
+            'strong' //加粗
+            , 'italic' //斜体
+            , 'underline' //下划线
+            , 'del' //删除线
+            , '|' //分割线
+            , 'left' //左对齐
+            , 'center' //居中对齐
+            , 'right' //右对齐
+            , 'link' //超链接
+            , 'unlink' //清除链接
+            , 'face' //表情
+            // , 'image' //插入图片
+            // , 'help' //帮助
+          ]
+        });
+        //提交
+        form.on('submit(edit)', function(data) {
+          data.field.show = layedit.getContent(editIndex);
+          $.ajax({
+            type: 'POST',
+            url: '{:url("edit")}',
+            data: {
+              data: JSON.stringify(data.field)
+            },
+            success: function(data) {
+              var status = JSON.parse(data);
+              if (status.icon == 6) {
+                layer.msg(status.msg, {
+                  icon: status.icon,
+                  time: 1000
+                }, function() {
+                  location.href = "{:url('cases/index')}";
+                });
+              } else {
+                layer.msg(status.msg, {
+                  icon: status.icon,
+                  time: 1000
+                }, function() {
+                  window.location.reload();
+                });
+              }
+            }
+          });
+          return false;
+        });
+      });
+    </script> -->
+</body>
+
+</html>

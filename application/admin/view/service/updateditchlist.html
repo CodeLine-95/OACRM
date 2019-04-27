@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">编辑来源</div>
+          <div class="layui-form layui-card-body" pad15>
+	          <div class="layui-form-item">
+                <label class="layui-form-label" for="name">渠道分类</label>
+                <div class="layui-input-inline">
+                  <select class="layui-input" name="typeid" lay-verify="typeid|required">
+                    {volist name="typelist" id="vv"}
+                    <option value="{$vv['id']}" {if condition="$ditch['typeid'] eq $vv['id']"} selected {/if}>{$vv['typename']}</option>
+                    {/volist}
+                  </select>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="name">来源名称</label>
+                <input type="hidden" name="id" value="{$ditch['id']}">
+                <div class="layui-input-inline">
+                  <input type="text" value="{$ditch['name']}" name="name" id="name" class="layui-input">
+                </div>
+              </div>
+              
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="entry">来源入口</label>
+                <div class="layui-input-block">
+                  <input type="text" value="{$ditch['entry']}" name="entry" id="entry" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="description">来源说明</label>
+                <div class="layui-input-block">
+                  <textarea name="description" id="description" class="layui-textarea">{$ditch['description']}</textarea>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" for="status">来源状态</label>
+                <div class="layui-input-block" id="status">
+                  <input type="radio" name="status" value="1" title="启动" {if condition="$ditch['status'] == 1"}checked{/if}>
+				  <input type="radio" name="status" value="2" title="暂停" {if condition="$ditch['status'] == 2"}checked{/if}>
+				  <input type="radio" name="status" value="3" title="筹备" {if condition="$ditch['status'] == 3"}checked{/if}>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <label class="layui-form-label"><button class="layui-btn" lay-submit lay-filter="add">修改来源</button></label>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    layui.use(['form','upload'], function(){
+      var form = layui.form,upload = layui.upload;
+      form.on('submit(add)', function(data){
+          $.ajax({
+              type:'POST',
+              url:'{:url("service/updateditchlist")}',
+              data: {
+                  data:JSON.stringify(data.field)
+              },
+              success:function (data) {
+                  var status = JSON.parse(data);
+                  if (status.icon == 6){
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.parent.location.reload();
+                      });
+                  } else {
+                      layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                          window.location.reload();
+                      });
+                  }
+              }
+          });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

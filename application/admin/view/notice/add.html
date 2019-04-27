@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="public:title"/}
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-form">
+          <div class="layui-form-item">
+            <label class="layui-form-label" for="title">消息标题</label>
+            <div class="layui-input-block">
+              <input type="text" name="title" id="title" class="layui-input" placeholder="请输入站内信息标题">
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label" for="content">消息内容</label>
+            <div class="layui-input-block">
+              <textarea name="content" id="content" class="layui-textarea" style="resize: none;" placeholder="请输入站内消息内容"></textarea>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <label class="layui-form-label" for="release_id">发布对象</label>
+            <div class="layui-input-block">
+              <select name="release_id" id="release_id">
+                <option value="0">全体员工</option>
+                {foreach $sectors as $s}
+                <option value="{$s.id}">{$s.name}</option>
+                {/foreach}
+              </select>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              <button class="layui-btn" lay-submit lay-filter="add">发布</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    layui.use(['form','element'], function(){
+      var form = layui.form,element = layui.element;
+      form.on('submit(add)', function(data){
+        $.ajax({
+          type:'POST',
+          url:'{:url("notice/add")}',
+          data: {
+            data:JSON.stringify(data.field)
+          },
+          success:function (data) {
+            var status = JSON.parse(data);
+            if (status.icon == 6){
+              layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                // window.parent.location.reload();
+                location.href="{:url('notice/system')}";
+              });
+            } else {
+              layer.msg(status.msg,{icon: status.icon,time:1000},function(){
+                window.location.reload();
+              });
+            }
+          }
+        });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>

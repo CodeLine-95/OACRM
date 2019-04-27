@@ -1,0 +1,64 @@
+<link rel="stylesheet" href="__TROOT__/admin/css/timeline.css">
+<section id="cd-timeline" class="cd-container">
+	{foreach $followups as $f}
+	<div class="cd-timeline-block">
+		<div class="cd-timeline-img cd-log">
+			<i class="layui-icon" style="color:#fff;font-size: 26px;">&#xe60e;</i>
+		</div>
+		<div class="cd-timeline-content" style="background-color:#f2f2f2;">
+			<p>状态：
+				<span>
+				{switch name="$f.client_status"}
+				{case value="1"}未知数据{/case}
+				{case value="2"}潜在数据{/case}
+				{case value="3"}意向数据{/case}
+				{case value="4"}精准数据{/case}
+				{case value="5"}已派数据{/case}
+				{case value="6"}洽谈需求{/case}
+				{case value="7"}提交报价{/case}
+				{case value="8"}诊断方案{/case}
+				{case value="9"}竞标投标{/case}
+				{case value="10"}签订合同{/case}
+				{case value="11"}首付款项{/case}
+				{case value="12"}达成合作{/case}
+				{case value="13"}执行方案{/case}
+				{case value="14"}开始执行{/case}
+				{case value="15"}数据汇报{/case}
+				{case value="16"}完成合同{/case}
+				{case value="17"}催收尾款{/case}
+				{case value="18"}合作结案{/case}
+				{/switch}
+				</span>
+			</p>
+			<p>备注：<span>{$f.remarks}</span></p>
+			<p>人员：<span>{$f.user_name}</span></p>
+			<p>附件：
+				{if condition="$f.upload_file == ''"}
+				<span>暂无</span>
+				{else}
+				<span><a href="{$f.upload_file}" style="color:rgb(30, 159, 255);">下载</a></span>
+				{/if}
+			</p>
+			<p>待办：<span>{$f.backlog}</span></p>
+			<span class="cd-date">{:date('Y-m-d H:i:s',$f.create_t)}</span>
+		</div>
+	</div>
+	{/foreach}
+	<div class="cd-timeline-block">
+		<div class="cd-timeline-img cd-btn">
+			<button onclick="alert_open('继续跟进','{:url('followup/add',array('id'=>$client.id))}')" class="layui-btn cd-btn layui-btn-sm">跟进</button>
+		</div>
+	</div>
+</section>
+<script type="text/javascript">
+	function alert_open(title,url){
+		layer.open({
+			type: 2,
+			area: ['800px', '400px'],
+			fix: false, //不固定
+			title: title,
+			content: url,
+		});
+	}
+
+</script>

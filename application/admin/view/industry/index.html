@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+   .layui-form-select{
+     width: 100px;
+   }
+   .layui-unselect{
+     background-color: #eee;
+   }
+   .layui-form-selected dl{
+     background-color: #eee;
+   }
+ </style>
+</head>
+<body>
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+        <crmblok>
+          <div style="position: relative;">
+            <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+            <button class="layui-btn layui-btn-normal" onclick="crm_admin_show('添加行业','{:url('industry/add')}')"><i class="layui-icon">&#xe608;</i>添加行业</button>
+          </div>
+        </crmblok>
+        <table class="layui-table layui-form" >
+          <thead>
+            <tr>
+              <th width="25" align="center">
+                <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+              </th>
+              <th align="center">行业名称</th>
+              <th align="center">所属分类</th>
+              <th align="center">行业备注说明</th>
+              <th width="100" align="center">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {empty name="catelist"}
+            <tr align="center" style="height:500px;"><td colspan="5">暂无行业</td></tr>
+          {else}
+            {volist name="catelist" id="pro"}
+              <tr>
+                <td>
+                  <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$pro.id}'><i class="layui-icon">&#xe605;</i></div>
+                </td>
+                <td>{$pro['name']}</td>
+                <td>{$pro['catename']}</td>
+                <td>{$pro['description']}</td>
+                <td>
+                  <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑','{:url('industry/edit',array('id'=>$pro.id))}')"><i class="layui-icon"></i></button>
+                  <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del({$pro['id']})"><i class="layui-icon"></i></button>
+                </td>
+              </tr>
+            {/volist}
+          {/empty}
+          </tbody>
+        </table>
+        <script type="text/javascript">
+          function delAll () {
+            var data = tableCheck.getData();
+            layer.confirm('确认要删除'+data+'吗？',function(index){
+              $.get("{:url('industry/del')}?id="+data,function(data){
+                var message = JSON.parse(data);
+                if (message.icon == 6){
+                    layer.msg(message.msg,{icon: message.icon,time:1000},function () {
+                        location.href=location.href
+                   });
+                } else {
+                    layer.msg(message.msg,{icon: message.icon,time:1000});
+                }
+              })
+            });
+          }
+
+          function del(id){
+            layer.confirm('确认要删除吗？',function(){
+              $.get("{:url('industry/del')}?id="+id,function(data){
+                var message = JSON.parse(data);
+                if (message.icon == 6){
+                    layer.msg(message.msg,{icon: message.icon,time:1000},function () {
+                        location.href=location.href
+                   });
+                } else {
+                    layer.msg(message.msg,{icon: message.icon,time:1000});
+                }
+              })
+            })
+          }
+        </script>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

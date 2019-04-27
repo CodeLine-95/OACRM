@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+ {include file="public:title"/}
+ <style media="screen">
+   .layui-table tbody tr:hover{
+     background-color: #fff;
+   }
+   .layui-form-select{
+    width: 100px;
+   }
+ </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-fluid" class="layui-form">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+        <!-- <crmblok>
+        <div class="layui-form">
+          <div class="layui-input-inline">
+            <select name="type">
+              <option value="1">姓名</option>
+              <option value="2">工号</option>
+              <option value="3">身份证</option>
+              <option value="4">员工电话</option>
+            </select>
+          </div>
+          <div class="layui-input-inline">
+            <input type="text" name="value" class="layui-input" style="background-color:#eee;border:none;">
+          </div>
+          <button class="layui-btn layui-btn-normal" type="submit"><i class="layui-icon layui-icon-search"></i>搜索</button>
+        </div>
+        </crmblok> -->
+        <table class="layui-table">
+          <thead>
+            <tr>
+              <th  align="center">账户昵称</th>
+              <th  align="center">登陆账号</th>
+              <th  align="center">账号类型</th>
+              <th  align="center">平台名称</th>
+              <th  align="center">绑定手机</th>
+              <th  align="center">手机主人</th>
+              <th  align="center">绑定微信</th>
+              <th  align="center">添加时间</th>
+              <!-- <th  align="center">操作</th> -->
+            </tr>
+          </thead>
+          <tbody>
+          {volist name="Medias" id="vv"}
+            <tr>
+              <td>{$vv['nick']}</td>
+              <td>{$vv['name']}</td>
+              <td>{$vv['typename']}</td>
+              <td>{$vv['platform']}</td>
+              <td>{$vv['tel']}</td>
+              <td>{$vv['hostname']}</td>
+              <td>{$vv['wechat']}</td>
+              <td><?php echo(date('Y-m-d h:i:s',$vv['create_t']));?></td>
+              <!-- <td> -->
+              	<!-- <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="crm_admin_show('编辑账号','{:url('media/update',['id'=>$vv['id']])}')">编辑</button> -->
+              	<!-- <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="del('{$vv['id']}')">删除</button> -->
+              <!-- </td> -->
+            </tr>
+          {/volist}
+          </tbody>
+        </table>
+    </div>
+    </div>
+  </div>
+</body>
+</html>
